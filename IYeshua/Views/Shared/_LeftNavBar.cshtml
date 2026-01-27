@@ -1,0 +1,373 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = @ViewBag.DomainName;
+    //Layout = "";
+    bool IsLogin = false;
+    bool IsMainUser = false;
+    if (!string.IsNullOrEmpty(HttpContextAccessor?.HttpContext?.Session?.GetString("UserName")?.ToString()))
+    {
+        IsLogin = true;
+    }
+    string  userID = HttpContextAccessor?.HttpContext?.Session?.GetString("UserID")?.ToString();
+    string account = HttpContextAccessor?.HttpContext?.Session?.GetString("AccountUserID");
+
+    if (!string.IsNullOrEmpty(userID) && !string.IsNullOrEmpty(account) && userID == account)
+    {
+        IsMainUser = true;
+    }
+}
+
+<div class="brand-bar">
+    @if (IsLogin)
+    {
+        @if (!string.IsNullOrEmpty(ViewBag.PageName) && ViewBag.PageName.ToLower() != "pricing")
+        {
+            <img src="/images/icon-hamburger.svg" class="brand-nav-item" alt="Toggle Navigation Panel" onclick="Toggle_Navbar()" />
+            @*  <div class="brand-bar-icon"><a href="/ManageProfile"><img src="images/setting-gear.svg" alt="" /></a></div> *@
+        }
+    }
+   @*  <div class="brand-bar-icon" title="Go to Homepage"><a href="/"><img src="/images/icon-home.svg" alt="Home" /></a></div> *@
+    <div class="brand-bar-icon" style="display:none"><a href="/"><img src="images/book-opened.svg" alt="" /></a></div>
+    <div class="brand-bar-icon" style="display:none"><a href="/"><img src="images/reading-book.svg" alt="" /></a></div>
+    <div class="brand-bar-icon" style="display:none"><a href="/"><img src="images/sound-settings.svg" alt="" /></a></div>
+    @if (IsMainUser)
+    {
+        @if (!string.IsNullOrEmpty(ViewBag.PageName) && ViewBag.PageName.ToLower() != "pricing")
+        {
+            <div class="brand-bar-icon"><a href="/manageprofile"><img src="/images/profile-settings.svg" alt="" /></a></div>
+        }
+    }
+
+    <div class="brand-bar-icon" style="display:none"><a href="/"><img src="images/users-avatar.svg" style="width:34px;margin-top:-5px;" alt="" /></a></div>
+    <div class="nb-title ancLogoLeftMenu">
+    </div>
+    <img src="" alt="" id="imgBrand" />
+</div>
+
+@{
+    if (ViewBag.IsLogin != null && ViewBag.IsLogin)
+    {
+        <div class="left-nav-bar" id="left-nav-bar">
+            <div class="slide-handle">
+                <svg width="10px" height="30px" viewBox="4 0 6 14" xmlns="http://www.w3.org/2000/svg" fill="#000" class="bi bi-three-dots-vertical">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                    <g id="SVGRepo_iconCarrier">
+                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z">
+                        </path>
+                    </g>
+                </svg>
+            </div>
+            <div class="nav-search-bar">
+                @*id="divSearchBar"*@
+                <div class="nav-search-wrap">
+                    <input id="txtSearchNav" type="text" @*onkeyup="searchMenu();"*@ autocomplete="off" class="nav-search" placeholder="Search" />
+                    <div class="nav-search-btn" title="Search">
+                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0 0 50 50">
+                            <path d="M 21 3 C 11.654545 3 4 10.654545 4 20 C 4 29.345455 11.654545 37 21 37 C 24.701287 37 28.127393 35.786719 30.927734 33.755859 L 44.085938 46.914062 L 46.914062 44.085938 L 33.875 31.046875 C 36.43682 28.068316 38 24.210207 38 20 C 38 10.654545 30.345455 3 21 3 z M 21 5 C 29.254545 5 36 11.745455 36 20 C 36 28.254545 29.254545 35 21 35 C 12.745455 35 6 28.254545 6 20 C 6 11.745455 12.745455 5 21 5 z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="new-chat" onclick="StartNewChat();" style="display:none!important;">
+                    <img src="~/images/new-chat.svg" title="New Chat" />
+                </div>
+            </div>
+
+
+            <div class="left-nav-panel">
+                <div class="left-nav-panel-inner">
+                    @{
+                        if (!string.IsNullOrEmpty(@ViewBag.IsAdmin) && @ViewBag.IsAdmin == "True" && !string.IsNullOrEmpty(@ViewBag.PageName) && @ViewBag.PageName.ToLower() == "index")
+                        {
+                            <!--Jubilee bible section -->
+                            <div class="left-nav-item-wrap">
+                                <div class="left-nav-item" style="cursor:pointer;position:relative; display:none;">
+                                    <p class="left-nav-item-txt">
+                                        Jubilee Bible (JSV)<br />
+                                        <small>What's First AI-Assisted Bible Translation</small>
+                                    </p>
+                                    <div class="left-nav-item-icon" style="cursor:pointer;">
+                                        <i class="mdi mdi-chevron-down"></i>
+                                    </div>
+                                    <input type="hidden" id="hdnBiblePrompt" value="">
+                                </div>
+                                <div class="lnip">
+                                    <div style="height:100%;">
+                                        <div class="scrollbar-macosx">
+                                            <div class="lnil-1">
+                                                <div class="cm-nav" id="cm-nav">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End Jubilee bible section -->
+                        }
+                    }
+
+                    <div class="left-nav-item-wrap active" id="divPromptSection">
+                        <div class="left-nav-item" style="cursor:pointer;">
+                            <p class="left-nav-item-txt">
+                                Jubilee Conversations<br />
+                                <small>The Bible Speaks - Hear It, Engage It, Live It!</small>
+                            </p>
+                            <div class="left-nav-item-icon" style="cursor:pointer">
+                                <i class="mdi mdi-chevron-down tabmenu-open"></i><i class="mdi mdi-chevron-up tabmenu-close"></i>
+                            </div>
+                        </div>
+                        <input type="hidden" id="hdParentID" value="" />
+
+                        <div class="lnip">
+                            <div style="height:100%;">
+                                <div class="scrollbar-macosx">
+                                    <div class="newchat-tab">
+                                        <button class="newchat-btn" id="" onclick="StartNewChat();" style="background-color: rgb(0, 153, 255); display: flex;">Start a New Chat</button>
+                                    </div>
+                                    <div class="lnil-1">
+                                        <div class="cm-nav">
+                                            <div class="cmn-item-1 active">
+                                                <div class="cmn-item-1-title" style="cursor:pointer;" onclick="activateJubileeConversation(this);">
+                                                    <div class="cmi-icon"><img src="/images/group-chat.svg" alt=""></div>
+                                                    <p class="cmn-txt">CONVERSATION THREADS</p>
+                                                    <div class="cmn-expand-icon"><i class="mdi mdi-chevron-down expand-nav"></i><i class="mdi mdi-chevron-up collapse-nav"></i></div>
+                                                </div>
+                                                <div class="cmn-item-subnav" id="divParentChildNode">
+                                                </div>
+                                            </div>
+                                            <div class="cmn-item-1" style="display:none">
+                                                <div class="cmn-item-1-title" style="cursor:pointer;" onclick="activateJubileeConversation(this);">
+                                                    <div class="cmi-icon"><img src="/images/group-chat.svg" alt=""></div>
+                                                    <p class="cmn-txt">COMMUNITY CONVERSATION</p>
+                                                    <div class="cmn-expand-icon"><i class="mdi mdi-chevron-down expand-nav"></i><i class="mdi mdi-chevron-up collapse-nav"></i></div>
+                                                </div>
+                                                <div class="cmn-item-subnav">
+                                                </div>
+                                            </div>
+                                            <div class="cmn-item-1" style="display:none">
+                                                <div class="cmn-item-1-title" style="cursor:pointer;" onclick="activateJubileeConversation(this);">
+                                                    <div class="cmi-icon"><img src="/images/group-chat.svg" alt=""></div>
+                                                    <p class="cmn-txt">BUSINESS CONVERSATION</p>
+                                                    <div class="cmn-expand-icon"><i class="mdi mdi-chevron-down expand-nav"></i><i class="mdi mdi-chevron-up collapse-nav"></i></div>
+                                                </div>
+                                                <div class="cmn-item-subnav">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    @{
+                        if (!string.IsNullOrEmpty(@ViewBag.IsAdmin) && @ViewBag.IsAdmin == "True" && @ViewBag.PageName == "book-content")
+                        {
+                            <div class="left-nav-item-wrap">
+                                <div class="add-new-btn" onclick="AddNewContentTypeTextbox()"><i class="mdi mdi-plus"></i></div>
+                                <div class="left-nav-item" style="cursor:pointer;">
+                                    <div class="left-nav-item-icon" style="cursor:pointer;">
+                                        <i class="mdi mdi-plus-circle-outline"></i>
+                                    </div>
+                                    <p class="left-nav-item-txt">Content Manager</p>
+                                </div>
+                                <input type="hidden" id="hdContentTypeID" value="">
+                                <div class="lnip">
+                                    <div style="height:100%;">
+                                        <div class="scrollbar-macosx">
+                                            <div class="lnil-1">
+                                                <div class="cm-nav" id="cm-nav">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else if (!string.IsNullOrEmpty(@ViewBag.IsAdmin) && @ViewBag.IsAdmin == "True" && @ViewBag.PageName == "ai-content-manager")
+                        {
+                            <div class="left-nav-item-wrap">
+                                <div class="add-new-btn" onclick="AddNewContentTypeTextbox()"><i class="mdi mdi-plus"></i></div>
+                                <div class="left-nav-item" style="cursor:pointer;">
+                                    <p class="left-nav-item-txt">AI Content Manager</p>
+                                    <div class="left-nav-item-icon" style="cursor:pointer;">
+                                        <i class="mdi mdi-chevron-down"></i>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="hdContentTypeID" value="">
+                                <div class="lnip">
+                                    <div style="height:100%;">
+                                        <div class="scrollbar-macosx">
+                                            <div class="lnil-1">
+                                                <div class="cm-nav" id="cm-navAI">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+
+                    <div class="left-nav-item-wrap" id="divMySettings">
+                        <!-- onclick="ClickExpandSettings()" -->
+                        <div class="left-nav-item" style="cursor:pointer;">
+                            <p class="left-nav-item-txt">
+                                My Settings
+                                <br />
+                                <small>Discover the Power of Personalization</small>
+                            </p>
+                            <div class="left-nav-item-icon" style="cursor:pointer">
+                                <i class="mdi mdi-chevron-down"></i>
+                                <!--onclick="ClickExpandSettings()"-->
+                            </div>
+                        </div>
+
+                        <div class="lnip">
+                            <div style="height:100%;">
+                                <div class="scrollbar-macosx">
+                                    @{
+                                        if (!string.IsNullOrEmpty(@ViewBag.Name))
+                                        {
+                                            if (IsMainUser)
+                                            {
+                                                if (ViewBag.PageName == "current-subscription")
+                                                {
+                                                    <div class="lnil-1 active">
+                                                        <div class="lnil-1-content" style="cursor:pointer;" onclick="OpenSubscriptionPage()">
+                                                            <div class="lnil-1-icon gear-icon"></div>
+                                                            <p class="lnil-1-txt">My Subscription Plan</p>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="lnil-1">
+                                                        <div class="lnil-1-content" style="cursor:pointer;" onclick="OpenSubscriptionPage()">
+                                                            <div class="lnil-1-icon gear-icon"></div>
+                                                            <p class="lnil-1-txt">My Subscription Plan</p>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+
+                                        }
+                                    }
+
+                                    @{
+                                        if (!string.IsNullOrEmpty(@ViewBag.Name))
+                                        {
+                                            <div class="lnil-1">
+                                                <div class="lnil-1-content">
+                                                    <div class="lnil-1-icon password-icon"></div>
+                                                    <a href="/changepassword"> <p class="lnil-1-txt">Change Password</p></a>
+                                                </div>
+                                            </div>
+                                        }
+
+                                        if (!string.IsNullOrEmpty(@ViewBag.Name))
+                                        {
+                                            if (ViewBag.PageName == "memorymanagement")
+                                            {
+                                                <div class="lnil-1 active">
+                                                    <div class="lnil-1-content">
+                                                        <div class="lnil-1-icon memory-icon"></div>
+                                                        <a href="/memorymanagement"> <p class="lnil-1-txt">Memory Management</p></a>
+                                                    </div>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="lnil-1">
+                                                    <div class="lnil-1-content">
+                                                        <div class="lnil-1-icon memory-icon"></div>
+                                                        <a href="/memorymanagement"> <p class="lnil-1-txt">Memory Management</p></a>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                      
+                                        @if (!string.IsNullOrEmpty(ViewBag.Name))
+                                        {
+                                            if (!string.IsNullOrEmpty(@ViewBag.IsAdmin) && @ViewBag.IsAdmin == "True")
+                                            {
+                                                <div class="lnil-1 @(ViewBag.PageName == "shareredirector" ? "active" : "")">
+                                                    <div class="lnil-1-content">
+                                                        <div class="lnil-1-icon share-icon"></div>
+                                                        <a href="/shareredirector">
+                                                            <p class="lnil-1-txt">Share Redirector</p>
+                                                        </a>
+                                                    </div>
+                                                    @*<div class="lnil-2">
+                                                        <div class="lnil-1-icon store-icon"></div>
+                                                        <p class="lnil-1-txt">Store 1</p>
+                                                    </div>
+                                                    <div class="lnil-2">
+                                                        <div class="lnil-1-icon store-icon"></div>
+                                                        <p class="lnil-1-txt">Store 2</p>
+                                                    </div>
+                                                    <div class="lnil-2">
+                                                        <div class="lnil-1-icon store-icon"></div>
+                                                        <p class="lnil-1-txt">Store 3</p>
+                                                    </div>*@
+                                                </div>
+                                            }
+                                        }
+                                    }
+
+                                    @{
+                                        if (!string.IsNullOrEmpty(@ViewBag.IsAdmin) && @ViewBag.IsAdmin == "True")
+                                        {
+                                            <div class="lnil-1" style="display:none;">
+                                                <div class="lnil-1-content">
+                                                    <div class="lnil-1-icon gear-icon"></div>
+                                                    <a href="/content-manager"> <p class="lnil-1-txt">Content Manager (Admin)</p></a>
+                                                </div>
+                                            </div>
+                                            <div class="lnil-1" style="display:none">
+                                                <div class="lnil-1-content">
+                                                    <div class="lnil-1-icon gear-icon"></div>
+                                                    <a href="/ai-content-manager"> <p class="lnil-1-txt">AI Content Manager (Admin)</p></a>
+                                                </div>
+                                            </div>
+                                            ///===============================================================
+                                            ///
+                                            //<div class="lnil-1" style="display:none">
+                                            //    <div class="lnil-1-content" onclick="toggleVoice()">
+                                            //        <div class="lnil-1-icon gear-icon"></div>
+                                            //        <a> <p class="lnil-1-txt">Voice Settings</p></a>
+                                            //    </div>
+                                            //</div>
+                                            //<div class="voice-setting" id="voice-setting" style="display:none!important">
+                                            //</div>
+                                            ///==================================================================
+                                        }
+                                        else
+                                        {
+                                            ///==================================================================
+                                            ///
+                                            //<div class="lnil-1" style="display:none">
+                                            //    <div class="lnil-1-content" onclick="toggleVoice()">
+                                            //        <div class="lnil-1-icon gear-icon"></div>
+                                            //        <a> <p class="lnil-1-txt">Voice Settings</p></a>
+                                            //    </div>
+                                            //</div>
+                                            //<div class="voice-setting" id="voice-setting" style="display:none!important">
+                                            //</div>
+                                            ///==========================
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js" asp-append-version="true"></script>

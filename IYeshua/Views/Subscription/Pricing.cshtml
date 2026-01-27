@@ -1,0 +1,183 @@
+﻿@{
+    ViewData["Title"] = "Pricing";
+}
+
+<div class="main-panel-container">
+
+
+    <div class="tab-content" id="pills-tabContent" style="height:100%;">
+        <div class="tab-pane fade active show" id="month" role="tabpanel" aria-labelledby="monthly" style="height:100%;">
+            @*   <div class="row" id="divPlans"></div>*@
+            @*-------------------------------------------*@
+            <div class="scrollbar-macosx">
+                <div style="width:100%;">
+                <div class="row fixTableHead" id="divPlans" style="min-width:1000px;">
+                    </div>
+                </div>
+            </div>
+            @*-------------------------------------------*@
+            <!-- end row -->
+            <!-- Pricing Plan Features -->
+            <div class="row" style="display:none;" id="divFeatureMonthRow">
+                <div class="col-xl-12">
+                    <div class="pft-wrap">
+                        <div class="pft-header">
+                            <div class="pfth-col1">
+                            </div>
+                            <div class="pfth-col2">
+                                <div class="plan-ver">
+                                    @*Regular AI Model (ChatGPT 3.5)*@
+                                    Advanced AI Model (ChatGPT 4.0)
+                                </div>
+                                <div class="plan-ver-col-wrap">
+                                    <div class="plan-ver-col">Basic (Free)</div>
+                                    <div class="plan-ver-col">Standard</div>
+                                    <div class="plan-ver-col">Deluxe</div>
+                                </div>
+                            </div>
+                            <div class="pfth-col3">
+                                <div class="plan-ver">
+                                    Advanced AI Model (ChatGPT 4.0)
+                                </div>
+                                <div class="plan-ver-col-wrap">
+                                    <div class="plan-ver-col2">Professional</div>
+                                    <div class="plan-ver-col2">Enterprise</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pft-body" id="divFeatures"></div>
+                        <div class="pft-footer">
+                            <div class="pftf-row">
+                                <div class="pftf-col-h">
+                                </div>
+                                <div class="pftf-col-p">
+                                    <span class="plan-pricing"></span>
+                                    <span class="plan-duraion"></span>
+                                </div>
+                                <div class="pftf-col-p">
+                                    <span class="plan-pricing"></span>
+                                    <span class="plan-duraion"></span>
+                                </div>
+                                <div class="pftf-col-p">
+                                    <span class="plan-pricing"></span>
+                                    <span class="plan-duraion"></span>
+                                </div>
+                                <div class="pftf-col-p-2">
+                                    <span class="plan-pricing"></span>
+                                    <span class="plan-duraion"></span>
+                                </div>
+                                <div class="pftf-col-p-2">
+                                    <span class="plan-pricing"></span>
+                                    <span class="plan-duraion"></span>
+                                </div>
+                            </div>
+                            <div class="pftf-row">
+                                <div class="pftf-col-h"></div>
+                                <div class="pftf-col plan-sel"></div>
+                                <div class="pftf-col plan-sel" id="btnPlanStandard"></div>
+                                <div class="pftf-col plan-sel" id="btnPlanDeluxe"></div>
+                                <div class="pftf-col plan-sel" id="btnPlanProfessional"></div>
+                                <div class="pftf-col plan-sel" id="btnPlanEnterprise"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Pricing Plan Features End -->
+        </div>
+        <!-- end tab pane -->
+        <div class="tab-pane fade" id="year" role="tabpanel" aria-labelledby="yearly">
+            <div class="row" id="divPlansYearly"></div>
+            <!-- Pricing Plan Features -->
+            <div class="row" style="display:none;" id="divFeatureYearRow">
+                <div class="col-xl-12">
+                    <div class="pft-wrap">
+                        <div class="pft-header">
+                            <div class="pfth-col1">
+                            </div>
+                            <div class="pfth-col2">
+                                <div class="plan-ver">
+                                    @*Regular AI Model (ChatGPT 3.5)*@
+                                    Advanced AI Model (ChatGPT 4.0)
+                                </div>
+                                <div class="plan-ver-col-wrap">
+                                    <div class="plan-ver-col">Basic (Free)</div>
+                                    <div class="plan-ver-col">Standard</div>
+                                    <div class="plan-ver-col">Deluxe</div>
+                                </div>
+                            </div>
+                            <div class="pfth-col3">
+                                <div class="plan-ver">
+                                    Advanced AI Model (ChatGPT 4.0)
+                                </div>
+                                <div class="plan-ver-col-wrap">
+                                    <div class="plan-ver-col2">Professional</div>
+                                    <div class="plan-ver-col2">Enterprise</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pft-body" id="divFeaturesYearly"></div>
+                        <div class="pft-footer">
+                            <div class="pftf-row">
+                                <div class="pftf-col-h">
+                                </div>
+                                <div class="pftf-col-p">
+                                    <span class="plan-pricing"></span>
+                                    <span class="plan-duraion"></span>
+                                </div>
+                                <div class="pftf-col-p">
+                                    <span class="plan-pricing"></span>
+                                    <span class="plan-duraion"></span>
+                                </div>
+                                <div class="pftf-col-p">
+                                    <span class="plan-pricing"></span>
+                                    <span class="plan-duraion"></span>
+                                </div>
+                                <div class="pftf-col-p-2">
+                                    <span class="plan-pricing"></span>
+                                    <span class="plan-duraion"></span>
+                                </div>
+                                <div class="pftf-col-p-2">
+                                    <span class="plan-pricing"></span>
+                                    <span class="plan-duraion"></span>
+                                </div>
+                            </div>
+                            <div class="pftf-row">
+                                <div class="pftf-col-h"></div>
+                                <div class="pftf-col plan-sel"></div>
+                                <div class="pftf-col plan-sel" id="btnPlanStandard"></div>
+                                <div class="pftf-col plan-sel" id="btnPlanDeluxe"></div>
+                                <div class="pftf-col plan-sel" id="btnPlanProfessional"></div>
+                                <div class="pftf-col plan-sel" id="btnPlanEnterprise"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Pricing Plan Features End -->
+        </div>
+        <!-- end tab pane -->
+    </div>
+    <!-- end tab content -->
+    @{
+        @if (!string.IsNullOrEmpty(ViewBag.Message))
+        {
+            <div class="overlay @(string.IsNullOrEmpty(ViewBag.Message) ? "display:none" : "display:block")" id="divSubscriptionpopup">
+                <div class="signup-msg-popup">
+                    <div class="close-icon" onclick="CloseSubscriptionPopup()">×</div>
+                    <div class="error-chk"></div>
+                    <p class="success-heading" style="font-size:25px;">@ViewBag.Message</p>
+                    <div class="plan-btn" style="width: 250px;" onclick="CloseSubscriptionPopup()">Cancel</div>
+                </div>
+            </div>
+        }
+
+    }
+</div>
+
+
+<script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js" asp-append-version="true"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js" asp-append-version="true"></script>
+<script src="~/js/common.js" asp-append-version="true"></script>
+<script src="~/js/subscription/subscription.js" asp-append-version="true"></script>

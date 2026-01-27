@@ -1,0 +1,242 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutPlayer.cshtml";
+    ViewData["Title"] = "Player";
+}
+<style>
+    #audioPlayer {
+        display: none;
+    }
+</style>
+<div class="player-playing-pane">
+    <div class="album-cover">
+        @if (String.IsNullOrEmpty(@ViewBag.ProductImage))
+        {
+            <img src="../images/jubileechat_Avatar.png" id="song-thumbnail" alt="@ViewBag.FileName">
+        }
+        else
+        {
+            <img src="../ProductThumbnail/@ViewBag.ProductImage" id="song-thumbnail" alt="@ViewBag.FileName">
+        }
+        <img src="~/images/play-btn.png" class="play-icon" />
+      
+    </div>
+    <div class="player-control-pane">
+        <div class="now-playing-details">
+            <p class="now-playing-title">@ViewBag.ItemName</p>
+            <p class="now-playing-album">@ViewBag.ProductName</p>
+        </div>
+        <div class="audio-player">
+            <div class="audio-frame">
+                @* <audio id="audioPlayer"></audio> *@
+                @* src="@ViewBag.SharedLink" *@
+                <audio controls id="audioPlayer"></audio>
+            </div>
+        </div>
+        <div class="player-wrapper">
+            <!-- Progress bar -->
+            <div class="progress-container">
+                <div class="progress"></div>
+                <div class="progress-thumb"></div>
+            </div>
+            <div class="progress-timer">
+                <span id="currentTime">0.00</span>
+                <span id="duration">@ViewBag.Duration</span>
+                <input type="hidden" id="hdnItemId" value="@ViewBag.hdnItemId" />
+            </div>
+        </div>
+        <div class="player-controls">
+            <div class="Volume">
+                <img src="../images/volume.svg" alt="Volume" class="add-track-btn" id="volumeBtn" title="Mute" />
+            </div>
+            <div class="prev-track">
+                <img src="../images/rewind-10-seconds.svg" alt="Rewind Track" class="prev-btn" title="Rewind Track" />
+            </div>
+            <div class="play-pause">
+                <img src="../images/play.svg" alt="Play/Pause" class="play-btn" title="Play/Pause" />
+            </div>
+            <div class="next-track">
+                <img src="../images/forward-10-seconds.svg" alt="Forward Track" class="next-btn" title="Forward Track" />
+            </div>
+            <div class="replay">
+                <img src="../images/replay.svg" alt="Replay" class="replay-btn" title="Replay" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+     var isAlreadyHit = 0;
+    document.addEventListener("DOMContentLoaded", function() {
+      //console.log("▶️ Player script loaded");
+      const playlist = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(new[] { ViewBag.SharedLink }));
+      // console.log(playlist);
+      let   currentIdx = 0;
+      const audio      = document.getElementById("audioPlayer");
+      const btnToggle      = document.querySelector(".play-btn");
+      const btnNext    = document.querySelector(".next-btn");
+      const btnPrev    = document.querySelector(".prev-btn");
+      // const btnShuffle = document.querySelector(".shuffle-btn");
+      const btnReplay  = document.querySelector(".replay-btn");
+      const progressBar       = document.querySelector(".progress");
+      const progressThumb     = document.querySelector(".progress-thumb");
+      const progressContainer = document.querySelector(".progress-container");
+          const currentTimeDisplay = document.getElementById("currentTime");
+    const durationDisplay = document.getElementById("duration");
+    const volumeBtn = document.getElementById("volumeBtn");
+    const songThumbnailbtn = document.getElementById("song-thumbnail");
+    const togglePlayIcon  = document.querySelector(".play-icon");
+
+
+
+      // sanity‐check: none of these should be null
+      // load the first track on page-load
+        loadTrack(currentIdx);
+
+      function loadTrack(idx) {
+          // set the new source
+          audio.src = playlist[idx];
+          //audio.load();
+     }
+
+     audio.addEventListener("play",  updateToggleIcon);
+     audio.addEventListener("pause", updateToggleIcon);
+
+     audio.addEventListener("loadedmetadata", () => {
+      // if audio isn't paused (i.e. it’s already playing), show pause
+      if (!audio.paused) updateToggleIcon();
+    });
+        // allow seeking by clicking the bar
+    progressContainer.addEventListener("click", e => {
+      const rect = progressContainer.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const newTime = (clickX / rect.width) * audio.duration;
+      audio.currentTime = newTime;
+    });
+
+      
+      function updateToggleIcon() {
+         
+      btnToggle.src = audio.paused
+        ? "../images/play.svg"
+        : "../images/pause.svg";
+
+        togglePlayIcon.src = audio.paused
+        ? "/images/play-btn.png"
+        : ""
+
+            if (audio.currentTime === 0 && isAlreadyHit==0) {
+                isAlreadyHit = 1;
+                UpdateHitCounts($("#hdnItemId").val());
+        }
+
+     }
+     function updateButtons() {
+          //console.log(audio.paused);
+        if (audio.paused) {
+          btnPlay.style.display  = "inline";
+          btnPause.style.display = "none";
+        } else {
+          btnPlay.style.display  = "none";
+          btnPause.style.display = "inline";
+        }
+      }
+    //For the purpose to format time
+        function formatTime(time) {
+        if (isNaN(time)) return "0.00";
+        const minutes = Math.floor(time / 60);
+        const seconds = Math.floor(time % 60).toString().padStart(2, "0");
+        return `${minutes}.${seconds}`;
+    }
+      // initial load
+      //loadTrack(currentIdx);
+      //updateButtons();
+
+      btnToggle.addEventListener("click", () => {
+      if (audio.paused) {
+        audio.play();
+        //console.log("▶️ play()");
+      } else {
+        audio.pause();
+        //console.log("⏸ pause()");
+      }
+      updateToggleIcon();
+    });
+
+    togglePlayIcon.addEventListener("click", () => {
+      if (audio.paused) {
+        audio.play();
+        //console.log("▶️ play()");
+      } else {
+        audio.pause();
+        //console.log("⏸ pause()");
+      }
+      updateToggleIcon();
+    });
+
+    songThumbnailbtn.addEventListener("click",()=>{
+        if(audio.play){
+            audio.pause();
+        }
+    });
+
+        //For the purpose to forward song 10 sec.
+        btnNext.addEventListener("click", function () {
+          if (audio.currentTime + 10 < audio.duration) {
+            audio.currentTime += 10; // Forward 10 seconds
+          } else {
+            audio.currentTime = audio.duration; // Go to end if less than 10 seconds remain
+          }
+        });
+
+      //For the purpose to forward song 10 sec.
+          btnPrev.addEventListener("click", function () {
+          if (audio.currentTime - 10 > 0) {
+             audio.currentTime -= 10; // Go back 10 seconds
+           } else {
+             audio.currentTime = 0; // Go to start if less than 10 seconds remain
+             }
+          });
+
+      btnReplay.addEventListener("click", function() {
+        audio.currentTime = 0;
+        audio.play();       
+        updateToggleIcon();
+      });
+
+      audio.addEventListener("ended", function() {
+        currentIdx = (currentIdx + 1) % playlist.length;
+        loadTrack(currentIdx);
+        // audio.play();        
+        updateToggleIcon();
+      });
+
+      // optional: log time updates
+      audio.addEventListener("timeupdate", function() {
+        if (!audio.duration) return;
+        const pct = (audio.currentTime / audio.duration) * 100;
+        // console.log(" Current time" + audio.currentTime+ "Duration"+audio.duration);
+        progressBar.style.width     = pct + "%";
+        progressThumb.style.left    = pct + "%";
+
+         currentTimeDisplay.textContent = formatTime(audio.currentTime);
+         durationDisplay.textContent = formatTime(audio.duration);
+      });
+
+      // Volume toggle (mute/unmute)
+          volumeBtn.addEventListener("click", function () {
+      audio.muted = !audio.muted;
+
+      volumeBtn.src = audio.muted
+        ? "../images/mute.svg"
+        : "../images/volume.svg";
+    });
+
+
+
+    });
+</script>
+<script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+<script src="~/js/player/player.js" asp-append-version="true"></script>
+

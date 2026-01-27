@@ -1,0 +1,43 @@
+﻿@{
+    ViewData["Title"] = "ask to Jubilee";
+}
+
+<div class="main-panel-container">
+    <div class="main-panel">
+        <div style="display:flex;flex-direction:column;height:100%; align-items: center;">
+            <div class="mic-panel">
+                <div class="mic-wrap">
+                    <img src="/images/green-mic.svg" class="mic-symbol active" id="mic-on" title="Search by Voice" alt="Mic">
+                    <img src="/images/red-mic.svg" class="mic-symbol" id="mic-off" title="" alt="Mic Mute">
+                </div>
+                <div class="mic-wrap stop-speak" id="stop-speak">
+                    <img src="/images/stop-hand.svg" class="stop-speak-symbol" title="Stop speaking" alt="Stop speaking Icon" onclick="stopSpeaking()">
+                </div>
+                <div class="mic-wrap">
+                    <img src="/images/cross.svg" class="close-symbol" title="Stop all" alt="Close Icon" onclick="stopCommunication()">
+                </div>
+            </div>
+            <div class="voice-animation">
+                <div class="speech-circle active" id="speech-circle">
+                </div>
+                <img src="~/images/circle-ripple.svg" id="circle-ripple" class="circle-ripple" />
+                <img src="~/images/thinking.gif" class="processing" id="processing" />
+                <img src="~/images/sound-wave.gif" class="response" id="response" />
+            </div>
+            <div class="result-panel @*show-mode*@" style="overflow: hidden;flex: 1 1 0%; width:100%;">
+                <div id="divResults" style="height:100%;width:100%;overflow-y:auto;"></div>
+                <div class="mode-panel">
+                    <div class="mode-container">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="loader" style="display:none;" id="loader">
+    <img src="images/spinner.svg" alt="Loader" />
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+<script src="~/js/home/jubileegpttalkingpage.js" asp-append-version="true"></script>
+<script src="~/js/common.js" asp-append-version="true"></script>

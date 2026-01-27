@@ -1,0 +1,183 @@
+﻿@model DataTypes.ModelDataTypes.AlbumDetails
+@using System.Text.Encodings.Web
+@using Newtonsoft.Json
+@{
+    Layout = "~/Views/Shared/_LayoutPlayer.cshtml";
+}
+<style>
+    #audioPlayer2 {
+        display: none;
+    }
+</style>
+<div class="now-playing-pane">
+    <div class="album-cover">
+        @if (String.IsNullOrEmpty(Model.Albums[0].ProductImage))
+        {
+            <img src="../images/jubileechat_Avatar.png" alt="@Model.Albums[0].Product">
+        }
+        else
+        {
+            <img src="../ProductThumbnail/@Model.Albums[0].ProductImage" id="imgProductImage" alt="@Model.Albums[0].Product">
+
+        }
+    </div>
+    <div class="now-playing-details">
+        @if (Model.FileName != null)
+        {
+            <p class="now-playing-title" id="songtitle">@Model.FileName</p>
+        }
+        <p class="now-playing-album">@Model.Albums[0].Product</p>
+        <p class="now-playing-duration">@Model?.Albums?.Count Songs, @Model.SumDuration</p>
+    </div>
+    <div class="player-slider-wrapper">
+        <!-- Progress bar -->
+        <div class="progress-container">
+            <div class="progress"></div>
+            <div class="progress-thumb"></div>
+        </div>
+        <div class="progress-timer">
+            <span id="currentTime">0.00</span>
+            <span id="duration">0.00</span>
+        </div>
+    </div>
+</div>
+<div class="music-controls">
+    <div class="prev-track">
+        <img src="../images/rewind-10-seconds.svg" alt="Rewind Track" class="prev-btn" title="Rewind Track" />
+    </div>
+    <div class="play-pause">
+        <img src="../images/play.svg" alt="Play" class="play-btn" title="Play/Pause" />
+    </div>
+    <div class="next-track">
+        <img src="../images/forward-10-seconds.svg" alt="Forward Track" class="next-btn" title="Forward Track" />
+    </div>
+
+    <div class="download">
+        <img src="../images/down-arrow.svg" alt="Download" class="download-btn" title="Next Track" />
+    </div>
+    <div class="download">
+        <img src="../images/down-arrow.svg" alt="Download" class="upload-btn" title="Previous Track" />
+    </div>
+    <div class="Volume">
+        <img src="../images/volume.svg" alt="Volume" class="add-track-btn" title="Volume" />
+    </div>
+   @*  <div class="lock" onclick="unlockAlbum();">
+        <img src="/images/lock.svg" class="lock-btn" title="" alt="">
+    </div> *@
+
+
+    <div class="volume-container" style="display:none">
+        <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1">
+    </div>
+
+
+</div>
+<div class="playlist">
+    <div class="scrollbar-macosx">
+        <div class="scroll-inner" style="padding-top: 20px;">
+           
+            @if (Model?.Albums != null && Model.Albums.Count > 0)
+            {
+                var isFPDirectory = ViewBag.IsFPDirectory as bool? ?? false;
+
+                foreach (var item in Model.Albums)
+                {
+                    if (item?.IsActive == true)
+                    {
+                        if (item?.Archive == true)
+                        {
+                            var safeAzureFilename = item.Azurefilename ?? "";
+                            var safeFileName = item.FileName ?? "";
+                            var safeDuration = !string.IsNullOrEmpty(item.Duration) ? item.Duration : "0:00";
+                            var safeProduct = item.Product ?? "";
+
+                            // Determine CSS class based on directory and ID
+                            var rowClass = !isFPDirectory && item.ID != 1 ? "locked-track" : "";
+
+                            <div class="playlist-row @rowClass" data-id="@item.ItemId"
+                            id="songlist-@item.ID" 
+                             data-azurefilename="@safeAzureFilename"
+                             data-filename="@safeFileName"
+                             data-duration="@safeDuration"
+                             data-fileExtension="@item.FileExtension"
+                             onclick="ActivateItem(@item.ID, '@safeAzureFilename', '@JavaScriptEncoder.Default.Encode(safeFileName)',0,'@item.ItemId')">
+
+                            <div class="plrc-1">@item.ID</div>
+
+                            <div class="plrc-2">
+                                <div class="playlist-track-title">@safeFileName</div>
+                                <div class="playlist-album">@safeProduct</div>
+                            </div>
+
+                            <div class="plrc-3">
+                                <div class="lock">
+                                    <img src="~/images/lock.svg" class="lock-btn" alt="" />
+                                </div>
+                            </div>
+
+                            <div class="plrc-3">@safeDuration</div>
+                        </div>
+                        }
+                    }
+                }
+            }
+
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="IsfreeAblum" value="@(ViewBag.IsFPDirectory as bool? ?? false)" />
+
+
+<div class="audio-player">
+    <div class="audio-frame">
+        <audio controls id="audioPlayer2">
+        </audio>
+    </div>
+</div>
+
+<div id="videoPlayer">
+
+</div>
+
+
+<div class="overlay" id="viralMusicPlayer" style="display:none;">
+</div>
+
+<div class="cust-overlay" id="UnlockAlbumPopup" style="display:none;">
+    <div class="cust-popup">
+        <div class="close-video-popup" onclick="closeUnlockPopup()"><img src="/Images/close-circle.svg" title="Close" alt="Close" onclick="closeUnlockPopup()" /></div>
+        <div class="popup-header">
+            @* <div class="popup-header-icon">
+                <img src="/images/folder-add-2.svg" />
+            </div> *@
+            <p>Unlock Album</p>
+        </div>
+        <div class="popup-inner">
+            <div class="field-wrap">
+                <span class="field-lbl">Email:*</span>
+                <input type="text" class="txt-box" id="txtEmailAddress" placeholder="Enter Email Address" autocomplete="off" maxlength="63" />
+                <span id="EmailAddressError" style="display: none;"></span>
+            </div>
+        </div>
+        <div class="popup-btn-panel" style="border-top: 1px solid #dedede;">
+            <button onclick="closeUnlockPopup()">Cancel</button>
+            <button onclick="VerifyEmailToUnlockAlbum()">Unlock</button>
+            <input type="hidden" id="selectedFolderId" />
+            <input type="hidden" id="ParentFolderId" />
+            <input type="hidden" id="isParent" />
+            <input type="hidden" id="hdnid" />
+            <input type="hidden" id="level" />
+            <input type="hidden" id="IsRoot" />
+            <input type="hidden" id="hdnfoldername" />
+            <input type="hidden" id="hdnRecordId" />
+
+        </div>
+    </div>
+</div>
+
+<input type="hidden" value="@ViewBag.ShareID" id="shareChatID" />
+<input type="hidden" value="@ViewBag.IsPayment" id="IsPayment" />
+
+<script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+<script src="~/js/player/player.js" asp-append-version="true"></script>

@@ -1,0 +1,91 @@
+﻿@model DataTypes.ModelDataTypes.Player.AlbumItems;
+
+    <div class="scrollbar-macosx">
+        <div class="scroll-inner">
+            @* Show Spotlight Songs *@
+            @if (Model.IsSpotLights.Count > 0)
+            {
+                <div class="spotlight">
+                    @foreach (var item in Model.IsSpotLights)
+                    {
+                        <a class="album-list-row" href="/share/@item.AzurefileName">
+
+                            <div class="alrc-1">
+                                <div class="album-cover-pic">
+
+
+                                    @if (String.IsNullOrEmpty(@item.ProductImage))
+                                    {
+                                        <img src="../images/jubileechat_Avatar.png" alt="@item.ProductName">
+                                    }
+                                    else
+                                    {
+                                        <img src="../ProductThumbnail/@item.ProductImage" alt="@item.ProductName">
+
+                                    }
+                                    @* <img src="images/album-1.png" alt="@item.ProductName"> *@
+                                </div>
+                            </div>
+                            <div class="alrc-2">
+                                <div class="playlist-track-title league-gothic-font">@item.FileName</div>
+                                <div class="playlist-album">@item.ProductName</div>
+                            </div>
+                            @* <div class="alrc-3">
+                                            <div class="buy-btn">Buy</div>
+                                        </div> *@
+                        </a>
+                    }
+                </div>
+            }
+
+            @* Show album and its songs *@
+            @if (Model.ProductDetails.Count > 0)
+            {
+                @foreach (var item in Model.ProductDetails)
+                {
+                <div class="album-cat"  onclick="ExpendSongs(@item.ProductID);" id="ProductID_@item.ProductID">
+                    <p>
+                        @item.ProductName
+                    </p>
+                    <img src="~/images/arrow-down.svg" class="list-expand"  />
+                    </div>
+                <div class="album-container" id="SongsProductID_@item.ProductID">
+                    @foreach (var data in item.ProductsSong)
+                   
+                    {
+                        <a class="album-list-row locked-track" style="pointer-events: auto; " id="SongsProductID_@data.SongsProductID" data-azurefilename="@data.AzurefileName" onclick="redirectToPlayList(this, '@(data.NanoId ?? data.AzurefileName)')">
+                            <div class="alrc-1">
+                                <div class="album-cover-pic">
+                                    @if (String.IsNullOrEmpty(@data.ProductImage))
+                                    {
+                                        <img src="../images/jubileechat_Avatar.png" alt="@data.ProductName">
+                                    }
+                                    else
+                                    {
+                                        <img src="../ProductThumbnail/@data.ProductImage" alt="@data.ProductName">
+
+                                    }
+                                    @* <img src="images/album-3.png" alt="The King's Return"> *@
+                                </div>
+                            </div>
+                            <div class="alrc-2">
+                                <div class="playlist-track-title">@data.FileName</div>
+                                <div class="playlist-album">@data.ProductName</div>
+                            </div>
+                            @*  <div class="alrc-3">
+                                            <div class="buy-btn">Buy</div>
+                                        </div> *@
+                            <div class="plrc-3">
+                                <div class="lock">
+                                    <img src="/images/lock.svg" class="lock-btn" title="" alt="">
+                                </div>
+                            </div>
+                        </a>
+                    }
+                    </div>
+                }
+            }
+
+
+        </div>
+    </div>

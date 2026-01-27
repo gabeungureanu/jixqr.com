@@ -1,0 +1,213 @@
+﻿@using System.Web;
+@{
+    var IsVersionDate = Configuration.GetValue<bool>("VersionFlag:IsVersionDate");
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta property="og:image" content="https://www.jubileechat.com/images/jubileechat_Avatar.png">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <style>
+        img:is([sizes="auto" i], [sizes^="auto," i]) {
+        contain-intrinsic-size: 3000px 1500px
+        }</style>
+    <meta name="application-name" content="Jubilee Chat" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="@ViewBag.Description">
+    <meta property="og:title" content="@ViewBag.OGTitle">
+    <meta property="og:description" content="@ViewBag.Description">
+    <meta property="og:url" content="@ViewBag.ShareLink">
+    <meta property="og:site_name" content="https://www.jubileechat.com/">
+    <meta property="og:image" content="https://www.jubileechat.com/images/jubileechat_Avatar.png">
+    <meta property="og:image:width" content="700">
+    <meta property="og:image:height" content="435">
+    <meta property="og:image:type" content="image/webp">
+    <meta property="og:type" content="website" />
+    @*----------------------------------------------------------*@
+    <link rel="canonical" href="@ViewBag.ShareLink">
+    <meta name="robots" content="noindex,nofollow"/>
+    <meta property="al:android:url" content="@ViewBag.ShareLink">
+    <meta property="al:android:package" content="com.linkedin.android">
+    <meta property="al:android:app_name" content="JubileeChat">
+    <meta property="al:ios:url" content="@ViewBag.ShareLink">
+    <meta property="al:ios:app_store_id" content="288429040">
+    <meta property="al:ios:app_name" content="JubileeChat">
+
+
+
+    @{
+        if (@ViewData["Title"] != null && @ViewData["Title"] != "")
+        {
+            switch (@ViewBag.DomainName.ToLower())
+            {
+                case "askjubileegpt.com":
+                    <title>GPT: Jubilee - @ViewData["Title"]</title>
+                    break;
+                default:
+                    <title>JIXQR - @ViewData["Title"]</title>
+                    break;
+            }
+        }
+        else
+        {
+            switch (@ViewBag.DomainName.ToLower())
+            {
+                case "askjubileegpt.com":
+                    <title>GPT: Jubilee</title>
+                    break;
+                default:
+                    <title>JIXQR</title>
+                    break;
+            }
+        }
+    }
+    @if (IsVersionDate)
+    {
+        <link href="~/css/main.css?v=@DateTime.Now.ToString("yyyyMMddHHmmss")" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700,800%7CMontserrat:400,700" rel="stylesheet" type="text/css" asp-append-version="true" />
+        <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.min.css' />
+        <link href="~/css/icons.min.css?v=@DateTime.Now.ToString("yyyyMMddHHmmss")" rel="stylesheet" />
+        @* <link rel="shortcut icon" href="" id="lnkFavicon" asp-append-version="true" /> *@
+        <link rel="shortcut icon" href="/images/askJubileeGPT-Logo-small.png" id="lnkFavicon">
+        <link href="~/css/jquery.scrollbar.css?v=@DateTime.Now.ToString("yyyyMMddHHmmss")" rel="stylesheet" />
+        <link href="~/css/custom.css?v=@DateTime.Now.ToString("yyyyMMddHHmmss")" rel="stylesheet" />
+    }
+    else
+    {
+        <link href="~/css/main.css" rel="stylesheet" type="text/css" asp-append-version="true" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700,800%7CMontserrat:400,700" rel="stylesheet" type="text/css" asp-append-version="true" />
+        <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.min.css' />
+        <link href="~/css/icons.min.css" rel="stylesheet" asp-append-version="true" />
+        @* <link rel="shortcut icon" href="" id="lnkFavicon" asp-append-version="true" /> *@
+        <link rel="shortcut icon" href="/images/askJubileeGPT-Logo-small.png" id="lnkFavicon">
+        <link href="~/css/jquery.scrollbar.css" rel="stylesheet" asp-append-version="true" />
+        <link href="~/css/custom.css" asp-append-version="true" rel="stylesheet" />
+    }
+
+</head>
+<body>
+    <div class="parent-container close-nav">
+        @{
+            @await Html.PartialAsync("~/Views/Shared/_LeftNavBar.cshtml")
+            ;
+        }
+        <div class="main-container" id="myDiv">
+            @{
+                @await Html.PartialAsync("~/Views/Shared/_Header.cshtml")
+                ;
+            }
+            @RenderBody()
+        </div>
+    </div>
+
+    <div class="bm-loader" style="display:none;">
+        <img src="~/images/spinner.svg" alt="Loader" />
+    </div>
+
+
+    <div>
+        <input type="hidden" value="" id="hfDomain" />
+        <input type="hidden" value="@ViewBag.RememberMe" id="hfRememberMe" />
+        <input type="hidden" value="" id="hfResponseReplacedText" />
+        <input type="hidden" value="1" id="hfRememberMeIdleTimeoutMinutes" />
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+        var currentDomain = window.location.hostname;
+        $("#hfDomain").val(currentDomain);
+        $(document).click(function () {
+        CheckSessionValue();
+        });
+        if ($("#hfRememberMe").val() == "True")
+        setTimeout(function () { CheckSessionValue(); }, 5000);
+        });
+
+        function showPopup(text) {
+        swal({
+        // title: "request to AJAX button",
+        text: text,
+        type: "info",
+        showCancelButton: true,
+        closeOnConfirm: false,
+        showLoaderOnConfirm: true,
+        allowOutsideClick: true
+        }, function () {
+        setTimeout(function () {
+        swal("request of AJAX is confirm!");
+        }, 3000);
+        });
+        }
+
+        function CheckSessionValue() {
+        if (window.location.href.toLowerCase().indexOf("signin") < 0
+        && window.location.href.toLowerCase().indexOf("recoverpassword") < 0
+        && window.location.href.toLowerCase().indexOf("signup") < 0
+        && $("#btnRedirectSignup").css("display") == 'none') {
+        $.ajax({
+        type: "get",
+        url: "/Account/CheckSessionActiveAndKeepAliveSession",
+        contenttype: "application/json;charset=utf-8",
+        datatype: "json",
+        data: {},
+        success: function (response) {
+        if (!response) {
+        window.location.href = "/signin";
+        }
+        else {
+        //   console.log("session variable refreshed");
+        }
+        if ($("#hfRememberMe").val() == "True")
+        setTimeout(function () { CheckSessionValue(); }, 5000);
+        },
+        error: function (error) {
+        if ($("#hfRememberMe").val() == "True")
+        setTimeout(function () { CheckSessionValue(); }, 5000);
+        }
+        });
+        }
+        }
+
+        function ShowFullLoader() {
+        const element = document.querySelector(".bm-loader");
+        if (element) {
+        element.style.display = "";
+        }
+        }
+
+        function HideFullLoader() {
+        const element = document.querySelector(".bm-loader");
+        if (element) {
+        element.style.display = "none";
+        }
+        }
+
+    </script>
+    
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js" asp-append-version="true"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery.scrollbar.min.js" asp-append-version="true"></script>
+    <script src="~/js/slick.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            jQuery('.scrollbar-macosx').scrollbar();
+
+            $(".regular").slick({
+                dots: true,
+                infinite: true,
+                slidesToShow: 3,
+                slidesToScroll: 1,
+                autoplay: true,
+                autoplaySpeed: 5000
+            });
+        });
+    </script>
+
+</body>
+</html>

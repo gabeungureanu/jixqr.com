@@ -1,0 +1,79 @@
+﻿@if (ViewBag.Content != null && (bool)ViewBag.Content)
+{
+    <div class="content-popup" style="display:@((ViewBag.Content != null && (bool)ViewBag.Content) ? "flex" : "none")" id="fileContent">
+        @{
+            var fileName = ViewBag.FileName as string;
+            var fileExtension = fileName != null ? System.IO.Path.GetExtension(fileName).ToLower() : "";
+        }
+        @if (fileExtension != ".mp4" && fileExtension != ".txt" && fileExtension != ".mp3" && fileExtension != ".jpg" && fileExtension != ".jpeg" && fileExtension != ".png" && fileExtension != ".gif" && fileExtension != ".bmp" && fileExtension != ".webp")
+        {
+        @*For Text file and Images*@
+            <div class="import-file-wrapper">
+                <div class="close-video-popup-share" onclick="closeContentPopup()">
+                    <img src="~/images/close-circle.svg" title="Close" alt="Close">
+                </div>
+                <iframe src="@ViewBag.sharedlink" allowfullscreen></iframe>
+                 <div class="audio-frame" style="height:100%">
+                @* <video controls autoplay src="@ViewBag.SharedLink"></video> *@
+               </div> 
+                
+            </div>
+        }
+
+        @if (fileExtension == ".jpg" || fileExtension == ".jpeg" || fileExtension == ".png" || fileExtension == ".gif" || fileExtension == ".bmp" || fileExtension == ".webp")
+        {
+            @*For Text file and Images*@
+            <div class="import-file-wrapper">
+                <div class="close-video-popup-share" onclick="closeContentPopup()">
+                    <img src="~/images/close-circle.svg" title="Close" alt="Close">
+                </div>
+                 @* <iframe src="@ViewBag.sharedlink" allowfullscreen></iframe> *@
+                <div class="img-frame" style="height:100%">
+                    <image src="@ViewBag.sharedlink" alt="Image"></image>
+                </div>
+                
+            </div>
+        } 
+
+        @if (fileExtension == ".mp3")
+        {
+            @*For mp3 file*@
+            <div class="import-file-wrapper">
+                <div class="close-video-popup-share" onclick="closeContentPopup()">
+                    <img src="~/images/close-circle.svg" title="Close" alt="Close">
+                </div>
+                <iframe src="@ViewBag.SharedLink" style="padding:40px 50px 20px 20px;" allowfullscreen></iframe>
+            </div>
+        }
+
+
+
+         @if (fileExtension == ".txt")
+        {
+            @*For Text file and Images*@
+            <div class="import-file-wrapper">
+                <div class="close-video-popup-share" onclick="closeContentPopup()">
+                    <img src="~/images/close-circle.svg" title="Close" alt="Close">
+                </div>
+                <iframe src="@ViewBag.SharedLink" style="padding:40px 50px 20px 20px;" allowfullscreen></iframe>
+            </div>
+        } 
+        @if (fileExtension == ".mp4")
+        {
+            <div class="w-100 h-100 d-f j-c-c a-i-c">
+                <div class="video-popup">
+                    <div class="close-video-popup-mp4" onclick="closeContentPopup()">
+                        <img src="~/images/close-circle.svg" title="Close" alt="Close">
+                    </div>
+                    <div class="video-panel">
+                        <video class="w-100" controls autoplay >
+                            <source src="@ViewBag.SharedLink" type="video/mp4">
+                            Your browser does not support HTML video.
+                        </video>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+<input type="hidden" value="@ViewBag.ShareID" id="shareChatID" />

@@ -1,0 +1,99 @@
+﻿@model DataTypes.ModelDataTypes.Player.ShareMusicModel;
+
+@{
+    var popupPoster = Context.Session.GetString("Poster");
+}
+
+@if (Model != null)
+{
+    <div class="vmp-popup">
+
+        <div class="vmp-popup-inner-2" id="badgePopup">
+            <div class="vmp-popup-header-2">
+                <p>@Model.Heading</p>
+            </div>
+            <div class="vmp-popup-body">
+                <div class="vmp-popup-img">
+                    <img src="@Model.ImagePath" alt="Messenger of Joy" Title="Messenger of Joy" style="width:200px;">
+                   
+                </div>
+                <div class="vmp-popup-content txt-white">
+                    @if (Model.PopupType != "ShareRequest17" && Model.PopupType != "ShareRequest18")
+                    {
+                        @Html.Raw(Model.Description)
+                    }
+                </div>
+            </div>
+            <div class="vmp-popup-footer-2">
+                <button onclick="@($"{Model.Action}")">@Model.CommandText1</button>
+                <p onclick="@($"{Model.Action}")">@Model.CommandText2</p>
+            </div>
+        </div>
+
+
+        <div class="vmp-popup-inner" id="ViralMusicPopup">
+            <div class="vmp-popup-header">
+                <img src="~/images/share.svg" alt="Share" Title="Share">
+                <p>@Model.Caption</p>
+                <img src="~/images/close.svg" onclick="closeSharePopup('@Model.PopupType');" alt="Close" Title="Close" style="margin-left: auto;">
+            </div>
+            <!--Content Popup-->
+            <div class="vmp-popup-body" id="contentPopup">
+                <div class="vmp-popup-img">
+                    @if (!string.IsNullOrEmpty(popupPoster))
+                    {
+                        <img src="~/ProductThumbnail/@popupPoster" alt="Album cover" title="Album cover">
+                    }
+                    else
+                    {
+                        <img src="~/images/jubileechat_Avatar.png" alt="Album cover" title="Album cover">
+                    }
+                </div>
+                <div class="vmp-popup-content">
+                    <p class="vmp-popup-heading">@Model.Heading</p>
+                    @Html.Raw(Model.Description)
+                </div>
+            </div>
+            <!--Share Popup-->
+
+            <div class="vmp-popup-body-2" id="sharePopup">
+                <div class="vmp-popup-img">
+                    @if (!string.IsNullOrEmpty(popupPoster))
+                    {
+                        <img src="~/ProductThumbnail/@popupPoster" alt="Album cover" title="Album cover">
+                    }
+                    else
+                    {
+                        <img src="~/images/jubileechat_Avatar.png" alt="Album cover" title="Album cover">
+                    }
+                </div>
+                <div class="vmp-popup-content-2">
+                    <img src="~/images/vmp-facebook.png" onclick="createShareMusicLink('facebook')" />
+                    <img src="~/images/vmp-pinterest.png" onclick="createShareMusicLink('pinterest')" />
+                    <img src="~/images/vmp-whatsapp.png" onclick="createShareMusicLink('whatsapp')" />
+                    <img src="~/images/vmp-twitterX.png" onclick="createShareMusicLink('x')" />
+                    <img src="~/images/vmp-googleplus.png" onclick="createShareMusicLink('googleplus')" />
+                    <img src="~/images/vmp-linkedin.png" onclick="createShareMusicLink('linkedin')" />
+                 
+                </div>
+            </div>
+
+            <div class="vmp-popup-footer">
+                <button id="actionBtn" onclick="@($"{Model.Action}")">@Model.CommandText1</button>
+                <p onclick="@(
+                   Model.PopupType == "ShareRequest10"
+                       ? "showNextPopup('ShareRequest17')"
+                       : (Model.PopupType == "ShareRequest12" || Model.PopupType == "ShareRequest19")
+                           ? "showNextPopup('ShareRequest13')"
+                           : Model.PopupType == "ShareRequest18"
+                               ? "ResentOTP()"
+                               : $"closeSharePopup('{Model.PopupType}')")">
+                @Model.CommandText2
+            </p>
+
+
+
+            </div>
+        </div>
+    </div>
+}

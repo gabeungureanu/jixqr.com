@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Success card add";
+}
+
+<div class="overlay">
+    <div class="signup-msg-popup">
+        <div class="success-chk"></div>
+        @*<div class="close-popup" title="Close Popup">&#9938;</div>*@
+        <p class="success-heading">Payment Successful.</p>
+        <p class="success-txt">
+            You have successfully added a new payment method.<br>
+        </p>
+        <div class="plan-btn" style="width: 260px;" onclick="GotoCurrentSubscription()">Go to Subscription</div>
+        @*<button id="btnAddPayment" onclick="return AddCardConfirmation()"></button>*@
+
+    </div>
+</div>
+<script type="text/javascript">
+    function GotoCurrentSubscription() {
+        window.location.href = '/currentsubscription';
+    }
+</script>

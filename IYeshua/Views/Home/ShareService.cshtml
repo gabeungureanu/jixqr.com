@@ -1,0 +1,850 @@
+﻿@{
+    ViewData["Title"] = "";
+}
+@{
+    var IsVersionDate = Configuration.GetValue<bool>("VersionFlag:IsVersionDate");
+}
+
+@if (!string.IsNullOrEmpty(@ViewBag.IsAdmin) && @ViewBag.IsAdmin == "True")
+{
+
+    <link href="~/css/dropzone.min.css" rel="stylesheet" type="text/css" asp-append-version="true" />
+    <div class="main-panel-container">
+        <div class="mm-wrapper">
+            <div class="mm-item-title ">
+                @* <img src="~/images/store.svg" class="section-heading-icon" /> *@
+                <div class="section-heading">Share Redirector</div>
+                <div class="add-items" id="parentid" onclick="AddFolder('IsRoot')">
+                    <span><img src="/images/folder-add-2.svg" alt="Add Folder" title="Add New Folder"></span>
+
+                </div>
+            </div>
+            <div class="mm-wrapper-inner">
+                <div class="scrollbar-macosx">
+                    <div class="scroll-inner">
+                        <div id="divShareRedirect">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*Right Panel*@
+        <div class="edit-panel">
+            <div class="edit-panel-inner">
+                <div class="mm-item-title ">
+                    <div class="section-heading" id="txtmainSection">File Upload</div>
+                </div>
+                <div class="edit-form-wrap" onblur="saveFileDetails();">
+                    <div class="scrollbar-macosx">
+                        <div class="scroll-inner" style="padding:0 10px 80px;">
+                            <div class="edit-panel-1" id="first-panel">
+                                <div class="field-wrap">
+                                    <span class="field-lbl">Author:</span>
+                                    <select class="txt-box" id="ddlAuthor">
+                                        <option value="">-- Select Author --</option>
+                                    </select>
+                                </div>
+                                <div class="field-wrap">
+                                    <span class="field-lbl">Series:</span>
+                                    <select class="txt-box" id="ddlSeries">
+                                        <option value="">-- Select Series --</option>
+                                    </select>
+                                    <!--<input type="text" class="txt-box" id="txtfilename" autocomplete="off" />-->
+                                </div>
+                                <div class="field-wrap">
+                                    <span class="field-lbl">Product:</span>
+                                    <select class="txt-box" id="ddlProduct">
+                                        <option value="">-- Select Product --</option>
+                                    </select>
+                                </div>
+                                <div class="field-wrap">
+                                    <span class="field-lbl">Delivery:</span>
+                                    <select class="txt-box" id="ddlDelivery">
+                                        <option value="">-- Select Delivery --</option>
+                                    </select>
+                                </div>
+                                <div style="display: flex;justify-content: space-around;margin-bottom:10px;">
+                                    <div class="field-wrap" style="margin-bottom:0; width:25%;">
+                                        <span class="field-lbl">Num:</span>
+                                        <input type="number" class="txt-box" value="-1" id="numDisplayOrder" autocomplete="off" />
+                                    </div>
+                                    <div class="field-wrap" style="margin-bottom:0; width:70%;">
+                                        <span class="field-lbl">Item Name:</span>
+                                        <input type="text" class="txt-box" id="txtfilename" autocomplete="off" />
+                                    </div>
+                                </div>
+
+                                <div class="field-wrap" style="height:80px;">
+                                    <span class="field-lbl">Share Description:</span>
+                                    <textarea class="text-area" id="txtdesc"></textarea>
+                                </div>
+
+                                <div class="cust-popup">
+                                    <div class="popup-header">
+                                        <p>Product Image Preview</p>
+                                    </div>
+                                    <div class="popup-inner">
+                                        <div class="product-img-wrapper">
+                                            <img src="@("../QRCodeImages/QRCode.png?v=" + DateTime.Now.ToString("ddMMyyyyhhmmsstt"))" id="ThumbnailPreview" alt="Thumbnail Preview">
+                                        </div>
+                                    </div>
+                                    <div class="popup-btn-panel" style="border-top: 1px solid #dedede;border-bottom:1px solid #dedede;">
+                                        <button id="confirmThumbnailUpload" onclick="confirmAlbumPopup()" style="pointer-events:none; filter:grayscale(1);">Upload</button>
+                                        <button onclick="uploadThumbnail()" title="Upload Image" class="d-f a-i-c j-c-c">
+                                            Select Image
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!--Updated Design-->
+                            @* Music-Album *@
+                            <div class="edit-panel-2" id="second-panel" style="display:none">
+                                <div>
+                                    <div class="edit-panel-acc">
+                                        <label class="my-chk-container" style="margin:0; font-weight:bold">
+                                            Music Album (Songs)
+                                            <input type="checkbox" id="chkMusicAlbum">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                        <div class="acc-icon">
+                                            <img src="~/images/plus.svg" id="plus-icon-music-album" onclick="ExpendContentPanel('music-album')" />
+                                            <img src="~/images/minus.svg" id="minus-icon-music-album" onclick="CollapseContentPanel('music-album')" style=" display:none;" />
+                                        </div>
+                                    </div>
+                                    <div class="music-album disable-block" id="music-album" style="display:none;margin-top: 10px;">
+                                        <div style="display: flex;justify-content: space-around;">
+                                            <div class="field-wrap share-link" style="width:1%; flex-grow:1;">
+                                                <span class="field-lbl">Marketing Link(PAYMENT):</span>
+                                                <input type="text" class="txt-box" id="txtsharelinkMusicAlbum" readonly autocomplete="off">
+                                                <img src="/images/copy-icon.svg" class="share-link-icon" alt="Copy Link" title="Copy Link" onclick="copyShareURL(this);" />
+                                            </div>
+                                            @{
+                                                var qrPath2 = !string.IsNullOrEmpty(ViewBag.QrPath) ? ViewBag.QrPath : null;
+                                            }
+                                            @*QR Image*@
+
+                                            <div id="imageQRM1" style="display:none;position: relative;width: 44px;margin-left: 5px;">
+                                                <img src="~/images/sampleQR.png" class="redirect-qr" alt="QR Code" title="QR Code" id="imageQRpath" onclick="QRPopup('imageQRpath');" />
+                                            </div>
+                                            @*QR Text*@
+                                            <div style="display:flex;" id="qrtextM1" class="qr-container">QR Code</div>
+                                            <div class="preview-btn-wrap" style="margin-left:5px;">
+                                                <button class="preview-btn" id="songPrev" onclick="PreviewSongs('txtsharelinkMusicAlbum');">
+                                                    <svg fill="none" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30px" height="30px" viewBox="0 0 92 92" enable-background="new 0 0 92 92" xml:space="preserve" stroke="none"><g id="SVGRepo_bgCarrier" stroke-width="0" /><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" /><g id="SVGRepo_iconCarrier"> <path id="XMLID_1239_" d="M91.3,43.8C90.6,42.8,74.4,19,46,19C17.6,19,1.4,42.8,0.7,43.8c-0.9,1.3-0.9,3.1,0,4.5 C1.4,49.2,17.6,73,46,73c28.4,0,44.6-23.8,45.3-24.8C92.2,46.9,92.2,45.1,91.3,43.8z M46,65C26.7,65,13.5,51.4,9,46 c4.5-5.5,17.6-19,37-19c19.3,0,32.5,13.6,37,19C78.4,51.5,65.3,65,46,65z M48.3,29.6c-4.4-0.6-8.7,0.5-12.3,3.2c0,0,0,0,0,0 c-7.3,5.5-8.8,15.9-3.3,23.2c2.7,3.6,6.5,5.8,10.9,6.5c0.8,0.1,1.6,0.2,2.3,0.2c3.6,0,7-1.2,9.9-3.3c7.3-5.5,8.8-15.9,3.3-23.2 C56.6,32.5,52.7,30.2,48.3,29.6z M52.3,54.5c-2.2,1.7-5,2.4-7.8,2c-2.8-0.4-5.3-1.9-7-4.1C34.1,47.7,35,41,39.7,37.5 c2.2-1.7,5-2.4,7.8-2c2.8,0.4,5.3,1.9,7,4.1C57.9,44.3,57,51,52.3,54.5z M51.9,40c0.8,0.7,1.2,1.8,1.2,2.8c0,1-0.4,2.1-1.2,2.8 c-0.7,0.7-1.8,1.2-2.8,1.2c-1.1,0-2.1-0.4-2.8-1.2c-0.8-0.8-1.2-1.8-1.2-2.8c0-1.1,0.4-2.1,1.2-2.8c0.7-0.8,1.8-1.2,2.8-1.2 C50.2,38.9,51.2,39.3,51.9,40z" /> </g></svg>
+                                                    Preview
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div style="display: flex;justify-content: space-around;">
+                                            <div class="field-wrap share-link" style="width:1%; flex-grow:1;">
+                                                <span class="field-lbl" style="color:#d00101;">Payment Link(FREE):</span>
+                                                <input type="text" class="txt-box" id="txtfreelinkMusicAlbum" readonly autocomplete="off">
+                                                <img src="/images/copy-icon.svg" class="share-link-icon" alt="Copy Link" title="Copy Link" onclick="copyShareURL(this);" />
+                                            </div>
+                                           @*  @{
+                                                var qrPath2 = !string.IsNullOrEmpty(ViewBag.QrPath) ? ViewBag.QrPath : null;
+                                            } *@
+                                            @*QR Image*@
+                                            <div id="imageQRP1" style="display:none;position: relative;width: 44px;margin-left: 5px;">
+                                                @* <img src="~/images/sampleQR.png" class="redirect-qr" alt="QR Code" title="QR Code" id="imageQRpathPayment" onclick="QRPopup('imageQRpathPayment');" /> *@
+                                                <img src="@("../images/sampleQR.png?v=" + DateTime.Now.ToString("ddMMyyyyhhmmsstt"))" class="redirect-qr" alt="QR Code" title="QR Code" id="imageQRpathPayment" onclick="QRPopup('imageQRpathPayment');" />
+                                            </div>
+                                            
+                                            @*QR Text*@
+                                            <div style="display:flex;" id="qrtextP1" class="qr-container">QR Code</div>
+                                            <div class="preview-btn-wrap" style="margin-left:5px;">
+                                                <button class="preview-btn" id="songPrev" onclick="PreviewSongs('txtfreelinkMusicAlbum');">
+                                                    <svg fill="none" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30px" height="30px" viewBox="0 0 92 92" enable-background="new 0 0 92 92" xml:space="preserve" stroke="none"><g id="SVGRepo_bgCarrier" stroke-width="0" /><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" /><g id="SVGRepo_iconCarrier"> <path id="XMLID_1239_" d="M91.3,43.8C90.6,42.8,74.4,19,46,19C17.6,19,1.4,42.8,0.7,43.8c-0.9,1.3-0.9,3.1,0,4.5 C1.4,49.2,17.6,73,46,73c28.4,0,44.6-23.8,45.3-24.8C92.2,46.9,92.2,45.1,91.3,43.8z M46,65C26.7,65,13.5,51.4,9,46 c4.5-5.5,17.6-19,37-19c19.3,0,32.5,13.6,37,19C78.4,51.5,65.3,65,46,65z M48.3,29.6c-4.4-0.6-8.7,0.5-12.3,3.2c0,0,0,0,0,0 c-7.3,5.5-8.8,15.9-3.3,23.2c2.7,3.6,6.5,5.8,10.9,6.5c0.8,0.1,1.6,0.2,2.3,0.2c3.6,0,7-1.2,9.9-3.3c7.3-5.5,8.8-15.9,3.3-23.2 C56.6,32.5,52.7,30.2,48.3,29.6z M52.3,54.5c-2.2,1.7-5,2.4-7.8,2c-2.8-0.4-5.3-1.9-7-4.1C34.1,47.7,35,41,39.7,37.5 c2.2-1.7,5-2.4,7.8-2c2.8,0.4,5.3,1.9,7,4.1C57.9,44.3,57,51,52.3,54.5z M51.9,40c0.8,0.7,1.2,1.8,1.2,2.8c0,1-0.4,2.1-1.2,2.8 c-0.7,0.7-1.8,1.2-2.8,1.2c-1.1,0-2.1-0.4-2.8-1.2c-0.8-0.8-1.2-1.8-1.2-2.8c0-1.1,0.4-2.1,1.2-2.8c0.7-0.8,1.8-1.2,2.8-1.2 C50.2,38.9,51.2,39.3,51.9,40z" /> </g></svg>
+                                                    Preview
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-f j-c-sw w-50 qr-icon-panel">
+                                            <div class="field-wrap m-0" style="min-height: 56px;">
+                                                <span class="field-lbl" style="position: relative;top: -3px;left: 0;">Choose QR Color:</span>
+                                                <div class="d-f j-c-c">
+                                                    <input style="padding: 0; width: 40px; height: 34px;" class="txt-box" type="color" id="color-MusicAlbum" name="Color" onblur="saveQRColor('txtsharelinkMusicAlbum','color-MusicAlbum')" value="#000000">
+                                                    <input type="text" id="colorBox-MusicAlbum" readonly="" class="txt-box" style="width: 1%;flex-grow: 1; margin-left: 10px;height: 34px;padding:10px 10px 8px 10px;">
+                                                </div>
+                                            </div>
+                                            <div class="field-wrap m-0" style="border-left:1px solid #ccc;min-height: 56px;">
+                                                <span class="field-lbl" style="position: relative;top: -3px;left: 5px;">Choose QR Icon:</span>
+
+                                                <div class="d-f j-c-sa">
+                                                    <div class="qr-icon-previw">
+                                                        <img src="/images/image-icon.svg?t=1755788573581" id="uploadedQRLogoMusicAlbum" alt="QR Icon" title="QR Icon">
+                                                    </div>
+                                                    <svg title="Upload Icon" onclick="UploadQRlogo('txtsharelinkMusicAlbum','uploadedQRLogoMusicAlbum');" class="upload-qr-icon" fill="none" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="32px" height="32px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"> <title>Upload QR Icon</title><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M256,0C114.609,0,0,114.609,0,256s114.609,256,256,256s256-114.609,256-256S397.391,0,256,0z M256,472 c-119.297,0-216-96.703-216-216S136.703,40,256,40s216,96.703,216,216S375.297,472,256,472z"></path> <g> <polygon fill-rule="evenodd" clip-rule="evenodd" points="352,320 352,352 256,352 160,352 160,320 128,320 128,384 384,384 384,320 "></polygon> <polygon fill-rule="evenodd" clip-rule="evenodd" points="240.047,208 240.047,336 272.047,336 272.047,208 320.047,208 256.047,128 192.047,208 "></polygon> </g> </g></svg>
+                                                    <!-- File Input -->
+                                                    <input type="file" id="qrLogoInput" style="display:none" accept="image/png, image/jpeg">
+                                                    <svg class="remove-qr-icon" onclick="ConfirmQRLogoRemove('uploadedQRLogoMusicAlbum','txtsharelinkMusicAlbum')" width="32px" height="32px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <title>Remove QR Icon</title>
+                                                        <rect width="32" height="32" fill="none"></rect>
+                                                        <path d="M5 7.5H19L18 21H6L5 7.5Z" stroke="none" stroke-linejoin="round"></path>
+                                                        <path d="M15.5 9.5L15 19" stroke="none" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        <path d="M12 9.5V19" stroke="none" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        <path d="M8.5 9.5L9 19" stroke="none" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        <path d="M16 5H19C20.1046 5 21 5.89543 21 7V7.5H3V7C3 5.89543 3.89543 5 5 5H8M16 5L15 3H9L8 5M16 5H8" stroke="none" stroke-linejoin="round"></path>
+                                                    </svg>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="d-f" style="flex-wrap: wrap; margin-top: 8px;">
+                                            <label class="my-chk-container">
+                                                In the Spotlight
+                                                <input type="checkbox" onclick="ToggleIsSpotlight('chkIsSpotlightMusicAlbum','txtsharelinkMusicAlbum')" id="chkIsSpotlightMusicAlbum">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </div>
+                                        <div class="uploaded-file" style="display:none;" id="MusicAlbumpreviewFile">
+                                            <span class="field-lbl">Uploaded File:</span>
+                                            <div class="d-f a-i-c" style="overflow:hidden;">
+                                                <img src="/images/add-file-2.svg" alt="Uploaded File" title="Uploaded File" style="margin-right:3px;" />
+                                                <p class="m-0 f-12" id="preFileNamepreviewFile" style="font-weight:bold;"></p>
+                                            </div>
+                                            <img src="/images/trash-icon.svg" alt="Delete File" onclick="DeleteUploadedFile()" title="Delete File" style="cursor:pointer;" />
+                                        </div>
+                                        <div class="" id="dropzone">
+                                            <div class="dropzone" id="MusicAlbumuploader"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @* AudioBook Chapter *@
+                                <div>
+                                    <div class="edit-panel-acc">
+                                        <label class="my-chk-container" style="margin:0; font-weight:bold">
+                                            Audio Book (Chapter)
+                                            <input type="checkbox" id="chkAudioBook">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                        <div class="acc-icon">
+                                            <img src="~/images/plus.svg" id="plus-icon-audio-book" onclick="ExpendContentPanel('audio-book')" />
+                                            <img src="~/images/minus.svg" id="minus-icon-audio-book" onclick="CollapseContentPanel('audio-book')" style="display:none;" />
+                                        </div>
+                                    </div>
+                                    <div class="audio-book disable-block" id="audio-book" style="display:none; margin-top: 10px;">
+                                        <div style="display: flex;justify-content: space-around;">
+                                            <div class="field-wrap share-link" style="width:1%; flex-grow:1;">
+                                                <span class="field-lbl">Marketing Link(PAYMENT):</span>
+                                                <input type="text" class="txt-box" id="txtsharelinkAudioBook" readonly autocomplete="off">
+                                                <img src="/images/copy-icon.svg" class="share-link-icon" alt="Copy Link" title="Copy Link" onclick="copyShareURL(this);" />
+                                            </div>
+                                            @*QR Image*@
+                                            <div id="imageQR-AudioBook" style="display:none;position: relative;width: 44px;margin-left: 5px;">
+                                                <img src="~/images/sampleQR.png" class="redirect-qr" alt="QR Code" title="QR Code" id="imageQRAudioBook" onclick="QRPopup('imageQRAudioBook');" />
+                                            </div>
+
+                                            @*QR Text*@
+                                            <div style="display:flex;" id="qrtext-AudioBook" class="qr-container">QR Code</div>
+
+                                            <div class="preview-btn-wrap" style="margin-left:5px;">
+                                                <button class="preview-btn" id="songPrev" onclick="PreviewSongs('txtsharelinkAudioBook');">
+                                                    <svg fill="none" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30px" height="30px" viewBox="0 0 92 92" enable-background="new 0 0 92 92" xml:space="preserve" stroke="none"><g id="SVGRepo_bgCarrier" stroke-width="0" /><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" /><g id="SVGRepo_iconCarrier"> <path id="XMLID_1239_" d="M91.3,43.8C90.6,42.8,74.4,19,46,19C17.6,19,1.4,42.8,0.7,43.8c-0.9,1.3-0.9,3.1,0,4.5 C1.4,49.2,17.6,73,46,73c28.4,0,44.6-23.8,45.3-24.8C92.2,46.9,92.2,45.1,91.3,43.8z M46,65C26.7,65,13.5,51.4,9,46 c4.5-5.5,17.6-19,37-19c19.3,0,32.5,13.6,37,19C78.4,51.5,65.3,65,46,65z M48.3,29.6c-4.4-0.6-8.7,0.5-12.3,3.2c0,0,0,0,0,0 c-7.3,5.5-8.8,15.9-3.3,23.2c2.7,3.6,6.5,5.8,10.9,6.5c0.8,0.1,1.6,0.2,2.3,0.2c3.6,0,7-1.2,9.9-3.3c7.3-5.5,8.8-15.9,3.3-23.2 C56.6,32.5,52.7,30.2,48.3,29.6z M52.3,54.5c-2.2,1.7-5,2.4-7.8,2c-2.8-0.4-5.3-1.9-7-4.1C34.1,47.7,35,41,39.7,37.5 c2.2-1.7,5-2.4,7.8-2c2.8,0.4,5.3,1.9,7,4.1C57.9,44.3,57,51,52.3,54.5z M51.9,40c0.8,0.7,1.2,1.8,1.2,2.8c0,1-0.4,2.1-1.2,2.8 c-0.7,0.7-1.8,1.2-2.8,1.2c-1.1,0-2.1-0.4-2.8-1.2c-0.8-0.8-1.2-1.8-1.2-2.8c0-1.1,0.4-2.1,1.2-2.8c0.7-0.8,1.8-1.2,2.8-1.2 C50.2,38.9,51.2,39.3,51.9,40z" /> </g></svg>
+                                                    Preview
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div style="display: flex;justify-content: space-around;">
+                                            <div class="field-wrap share-link" style="width:1%; flex-grow:1;">
+                                                <span class="field-lbl" style="color:#d00101;">Payment Link(FREE):</span>
+                                                <input type="text" class="txt-box" id="txtfreelinkAudioBook" readonly autocomplete="off">
+                                                <img src="/images/copy-icon.svg" class="share-link-icon" alt="Copy Link" title="Copy Link" onclick="copyShareURL(this);" />
+                                            </div>
+                                            @*QR Image*@
+                                            <div id="imageQR-AudioBook-Payment" style="display:none;position: relative;width: 44px;margin-left: 5px;">
+                                                <img src="~/images/sampleQR.png" class="redirect-qr" alt="QR Code" title="QR Code" id="imageQRAudioBook-Payment" onclick="QRPopup('imageQRAudioBook-Payment');" />
+                                            </div>
+
+                                            @*QR Text*@
+                                            <div style="display:flex;" id="qrtext-AudioBook-Payment" class="qr-container">QR Code</div>
+                                            <div class="preview-btn-wrap" style="margin-left:5px;">
+                                                <button class="preview-btn" id="songPrev" onclick="PreviewSongs('txtfreelinkAudioBook');">
+                                                    <svg fill="none" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30px" height="30px" viewBox="0 0 92 92" enable-background="new 0 0 92 92" xml:space="preserve" stroke="none"><g id="SVGRepo_bgCarrier" stroke-width="0" /><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" /><g id="SVGRepo_iconCarrier"> <path id="XMLID_1239_" d="M91.3,43.8C90.6,42.8,74.4,19,46,19C17.6,19,1.4,42.8,0.7,43.8c-0.9,1.3-0.9,3.1,0,4.5 C1.4,49.2,17.6,73,46,73c28.4,0,44.6-23.8,45.3-24.8C92.2,46.9,92.2,45.1,91.3,43.8z M46,65C26.7,65,13.5,51.4,9,46 c4.5-5.5,17.6-19,37-19c19.3,0,32.5,13.6,37,19C78.4,51.5,65.3,65,46,65z M48.3,29.6c-4.4-0.6-8.7,0.5-12.3,3.2c0,0,0,0,0,0 c-7.3,5.5-8.8,15.9-3.3,23.2c2.7,3.6,6.5,5.8,10.9,6.5c0.8,0.1,1.6,0.2,2.3,0.2c3.6,0,7-1.2,9.9-3.3c7.3-5.5,8.8-15.9,3.3-23.2 C56.6,32.5,52.7,30.2,48.3,29.6z M52.3,54.5c-2.2,1.7-5,2.4-7.8,2c-2.8-0.4-5.3-1.9-7-4.1C34.1,47.7,35,41,39.7,37.5 c2.2-1.7,5-2.4,7.8-2c2.8,0.4,5.3,1.9,7,4.1C57.9,44.3,57,51,52.3,54.5z M51.9,40c0.8,0.7,1.2,1.8,1.2,2.8c0,1-0.4,2.1-1.2,2.8 c-0.7,0.7-1.8,1.2-2.8,1.2c-1.1,0-2.1-0.4-2.8-1.2c-0.8-0.8-1.2-1.8-1.2-2.8c0-1.1,0.4-2.1,1.2-2.8c0.7-0.8,1.8-1.2,2.8-1.2 C50.2,38.9,51.2,39.3,51.9,40z" /> </g></svg>
+                                                    Preview
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-f j-c-sw w-50 qr-icon-panel">
+                                            <div class="field-wrap m-0" style="min-height: 56px;">
+                                                <span class="field-lbl" style="position: relative;top: -3px;left: 0;">Choose QR Color:</span>
+                                                <div class="d-f j-c-c">
+                                                    <input style="padding: 0; width: 40px; height: 34px;" class="txt-box" type="color" id="color-AudioBook" name="Color" onblur="saveQRColor('txtsharelinkAudioBook','color-AudioBook')" value="#000000">
+                                                    <input type="text" id="colorBox-AudioBook" readonly="" class="txt-box" style="width: 1%;flex-grow: 1; margin-left: 10px;height: 34px;padding:10px 10px 8px 10px;">
+                                                </div>
+                                            </div>
+                                            <div class="field-wrap m-0" style="border-left:1px solid #ccc;min-height: 56px;">
+                                                <span class="field-lbl" style="position: relative;top: -3px;left: 5px;">Choose QR Icon:</span>
+
+                                                <div class="d-f j-c-sa">
+                                                    <div class="qr-icon-previw">
+                                                        <img src="/images/image-icon.svg?t=1755788573581" id="uploadedQRLogoAudioBook" alt="QR Icon" title="QR Icon">
+                                                    </div>
+                                                    <svg title="Upload Icon" onclick="UploadQRlogo('txtsharelinkAudioBook','uploadedQRLogoAudioBook');" class="upload-qr-icon" fill="none" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="32px" height="32px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"> <title>Upload QR Icon</title><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M256,0C114.609,0,0,114.609,0,256s114.609,256,256,256s256-114.609,256-256S397.391,0,256,0z M256,472 c-119.297,0-216-96.703-216-216S136.703,40,256,40s216,96.703,216,216S375.297,472,256,472z"></path> <g> <polygon fill-rule="evenodd" clip-rule="evenodd" points="352,320 352,352 256,352 160,352 160,320 128,320 128,384 384,384 384,320 "></polygon> <polygon fill-rule="evenodd" clip-rule="evenodd" points="240.047,208 240.047,336 272.047,336 272.047,208 320.047,208 256.047,128 192.047,208 "></polygon> </g> </g></svg>
+                                                    <!-- File Input -->
+                                                    <input type="file" id="qrLogoInput" style="display:none" accept="image/png, image/jpeg">
+                                                    <svg class="remove-qr-icon" onclick="ConfirmQRLogoRemove('uploadedQRLogoAudioBook','txtsharelinkAudioBook')" width="32px" height="32px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <title>Remove QR Icon</title>
+                                                        <rect width="32" height="32" fill="none"></rect>
+                                                        <path d="M5 7.5H19L18 21H6L5 7.5Z" stroke="none" stroke-linejoin="round"></path>
+                                                        <path d="M15.5 9.5L15 19" stroke="none" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        <path d="M12 9.5V19" stroke="none" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        <path d="M8.5 9.5L9 19" stroke="none" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        <path d="M16 5H19C20.1046 5 21 5.89543 21 7V7.5H3V7C3 5.89543 3.89543 5 5 5H8M16 5L15 3H9L8 5M16 5H8" stroke="none" stroke-linejoin="round"></path>
+                                                    </svg>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                         <div class="d-f" style="flex-wrap: wrap; margin-top: 8px;">
+                                            <label class="my-chk-container">
+                                                In the Spotlight
+                                                <input type="checkbox" onclick="ToggleIsSpotlight('chkIsSpotlightAudioBook','txtsharelinkAudioBook')" id="chkIsSpotlightAudioBook">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </div>
+                                        <div class="uploaded-file" style="display:none;" id="previewFile2">
+                                            <span class="field-lbl">Uploaded File:</span>
+                                            <div class="d-f a-i-c" style="overflow:hidden;">
+                                                <img src="/images/add-file-2.svg" alt="Uploaded File" title="Uploaded File" style="margin-right:3px;" />
+                                                <p class="m-0 f-12" id="preFileName" style="font-weight:bold;"></p>
+                                            </div>
+                                            <img src="/images/trash-icon.svg" alt="Delete File" onclick="DeleteUploadedFile()" title="Delete File" style="cursor:pointer;" />
+                                        </div>
+                                        <div class="" id="dropzone2">
+                                            <div class="dropzone" id="AudioBookuploader"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @* Video Files (Animation, Movie, etc.) *@
+                                <div>
+                                    <div class="edit-panel-acc">
+                                        <label class="my-chk-container" style="margin:0; font-weight:bold">
+                                            Video Files (Animation, Movie, etc.)
+                                            <input type="checkbox" id="chkVideoFiles">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                        <div class="acc-icon">
+                                            <img src="~/images/plus.svg" id="plus-icon-video-file" onclick="ExpendContentPanel('video-file')" />
+                                            <img src="~/images/minus.svg" id="minus-icon-video-file" onclick="CollapseContentPanel('video-file')" style="display:none;" />
+                                        </div>
+                                    </div>
+                                    <div class="video-file disable-block" id="video-file" style="display:none; margin-top: 10px;">
+                                        <div style="display: flex;justify-content: space-around;">
+                                            <div class="field-wrap share-link" style="width:1%; flex-grow:1;">
+                                                <span class="field-lbl">Marketing Link(PAYMENT):</span>
+                                                <input type="text" class="txt-box" id="txtsharelinkVideoFiles" readonly autocomplete="off">
+                                                <img src="/images/copy-icon.svg" class="share-link-icon" alt="Copy Link" title="Copy Link" onclick="copyShareURL(this);" />
+                                            </div>
+                                            @*QR Image*@
+                                            <div id="imageQR-VideoFiles" style="display:none;position: relative;width: 44px;margin-left: 5px;">
+                                                <img src="~/images/sampleQR.png" class="redirect-qr" alt="QR Code" title="QR Code" id="imageQRVideoFiles" onclick="QRPopup('imageQRVideoFiles');" />
+                                            </div>
+
+                                            @*QR Text*@
+                                            <div style="display:flex;" id="qrtext-VideoFiles" class="qr-container">QR Code</div>
+                                            <div class="preview-btn-wrap" style="margin-left:5px;">
+                                                <button class="preview-btn" id="songPrev" onclick="PreviewSongs('txtsharelinkVideoFiles');">
+                                                    <svg fill="none" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30px" height="30px" viewBox="0 0 92 92" enable-background="new 0 0 92 92" xml:space="preserve" stroke="none"><g id="SVGRepo_bgCarrier" stroke-width="0" /><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" /><g id="SVGRepo_iconCarrier"> <path id="XMLID_1239_" d="M91.3,43.8C90.6,42.8,74.4,19,46,19C17.6,19,1.4,42.8,0.7,43.8c-0.9,1.3-0.9,3.1,0,4.5 C1.4,49.2,17.6,73,46,73c28.4,0,44.6-23.8,45.3-24.8C92.2,46.9,92.2,45.1,91.3,43.8z M46,65C26.7,65,13.5,51.4,9,46 c4.5-5.5,17.6-19,37-19c19.3,0,32.5,13.6,37,19C78.4,51.5,65.3,65,46,65z M48.3,29.6c-4.4-0.6-8.7,0.5-12.3,3.2c0,0,0,0,0,0 c-7.3,5.5-8.8,15.9-3.3,23.2c2.7,3.6,6.5,5.8,10.9,6.5c0.8,0.1,1.6,0.2,2.3,0.2c3.6,0,7-1.2,9.9-3.3c7.3-5.5,8.8-15.9,3.3-23.2 C56.6,32.5,52.7,30.2,48.3,29.6z M52.3,54.5c-2.2,1.7-5,2.4-7.8,2c-2.8-0.4-5.3-1.9-7-4.1C34.1,47.7,35,41,39.7,37.5 c2.2-1.7,5-2.4,7.8-2c2.8,0.4,5.3,1.9,7,4.1C57.9,44.3,57,51,52.3,54.5z M51.9,40c0.8,0.7,1.2,1.8,1.2,2.8c0,1-0.4,2.1-1.2,2.8 c-0.7,0.7-1.8,1.2-2.8,1.2c-1.1,0-2.1-0.4-2.8-1.2c-0.8-0.8-1.2-1.8-1.2-2.8c0-1.1,0.4-2.1,1.2-2.8c0.7-0.8,1.8-1.2,2.8-1.2 C50.2,38.9,51.2,39.3,51.9,40z" /> </g></svg>
+                                                    Preview
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div style="display: flex;justify-content: space-around;">
+                                            <div class="field-wrap share-link" style="width:1%; flex-grow:1;">
+                                                <span class="field-lbl" style="color:#d00101;">Payment Link(FREE):</span>
+                                                <input type="text" class="txt-box" id="txtfreelinkVideoFiles" readonly autocomplete="off">
+                                                <img src="/images/copy-icon.svg" class="share-link-icon" alt="Copy Link" title="Copy Link" onclick="copyShareURL(this);" />
+                                            </div>
+                                            @*QR Image*@
+                                            <div id="imageQR-VideoFiles-Payment" style="display:none;position: relative;width: 44px;margin-left: 5px;">
+                                                <img src="~/images/sampleQR.png" class="redirect-qr" alt="QR Code" title="QR Code" id="imageQRVideoFiles-Payment" onclick="QRPopup('imageQRVideoFiles-Payment');" />
+                                            </div>
+
+                                            @*QR Text*@
+                                            <div style="display:flex;" id="qrtext-VideoFiles-Payment" class="qr-container">QR Code</div>
+                                            <div class="preview-btn-wrap" style="margin-left:5px;">
+                                                <button class="preview-btn" id="songPrev" onclick="PreviewSongs('txtfreelinkVideoFiles');">
+                                                    <svg fill="none" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30px" height="30px" viewBox="0 0 92 92" enable-background="new 0 0 92 92" xml:space="preserve" stroke="none"><g id="SVGRepo_bgCarrier" stroke-width="0" /><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" /><g id="SVGRepo_iconCarrier"> <path id="XMLID_1239_" d="M91.3,43.8C90.6,42.8,74.4,19,46,19C17.6,19,1.4,42.8,0.7,43.8c-0.9,1.3-0.9,3.1,0,4.5 C1.4,49.2,17.6,73,46,73c28.4,0,44.6-23.8,45.3-24.8C92.2,46.9,92.2,45.1,91.3,43.8z M46,65C26.7,65,13.5,51.4,9,46 c4.5-5.5,17.6-19,37-19c19.3,0,32.5,13.6,37,19C78.4,51.5,65.3,65,46,65z M48.3,29.6c-4.4-0.6-8.7,0.5-12.3,3.2c0,0,0,0,0,0 c-7.3,5.5-8.8,15.9-3.3,23.2c2.7,3.6,6.5,5.8,10.9,6.5c0.8,0.1,1.6,0.2,2.3,0.2c3.6,0,7-1.2,9.9-3.3c7.3-5.5,8.8-15.9,3.3-23.2 C56.6,32.5,52.7,30.2,48.3,29.6z M52.3,54.5c-2.2,1.7-5,2.4-7.8,2c-2.8-0.4-5.3-1.9-7-4.1C34.1,47.7,35,41,39.7,37.5 c2.2-1.7,5-2.4,7.8-2c2.8,0.4,5.3,1.9,7,4.1C57.9,44.3,57,51,52.3,54.5z M51.9,40c0.8,0.7,1.2,1.8,1.2,2.8c0,1-0.4,2.1-1.2,2.8 c-0.7,0.7-1.8,1.2-2.8,1.2c-1.1,0-2.1-0.4-2.8-1.2c-0.8-0.8-1.2-1.8-1.2-2.8c0-1.1,0.4-2.1,1.2-2.8c0.7-0.8,1.8-1.2,2.8-1.2 C50.2,38.9,51.2,39.3,51.9,40z" /> </g></svg>
+                                                    Preview
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-f j-c-sw w-50 qr-icon-panel">
+                                            <div class="field-wrap m-0" style="min-height: 56px;">
+                                                <span class="field-lbl" style="position: relative;top: -3px;left: 0;">Choose QR Color:</span>
+                                                <div class="d-f j-c-c">
+                                                    <input style="padding: 0; width: 40px; height: 34px;" class="txt-box" type="color" id="color-VideoFiles" name="Color" onblur="saveQRColor('txtsharelinkVideoFiles','color-VideoFiles')" value="#000000">
+                                                    <input type="text" id="colorBox-VideoFiles" readonly="" class="txt-box" style="width: 1%;flex-grow: 1; margin-left: 10px;height: 34px;padding:10px 10px 8px 10px;">
+                                                </div>
+                                            </div>
+                                            <div class="field-wrap m-0" style="border-left:1px solid #ccc;min-height: 56px;">
+                                                <span class="field-lbl" style="position: relative;top: -3px;left: 5px;">Choose QR Icon:</span>
+
+                                                <div class="d-f j-c-sa">
+                                                    <div class="qr-icon-previw">
+                                                        <img src="/images/image-icon.svg?t=1755788573581" id="uploadedQRLogoVideoFiles" alt="QR Icon" title="QR Icon">
+                                                    </div>
+                                                    <svg title="Upload Icon" onclick="UploadQRlogo('txtsharelinkVideoFiles','uploadedQRLogoVideoFiles');" class="upload-qr-icon" fill="none" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="32px" height="32px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"> <title>Upload QR Icon</title><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M256,0C114.609,0,0,114.609,0,256s114.609,256,256,256s256-114.609,256-256S397.391,0,256,0z M256,472 c-119.297,0-216-96.703-216-216S136.703,40,256,40s216,96.703,216,216S375.297,472,256,472z"></path> <g> <polygon fill-rule="evenodd" clip-rule="evenodd" points="352,320 352,352 256,352 160,352 160,320 128,320 128,384 384,384 384,320 "></polygon> <polygon fill-rule="evenodd" clip-rule="evenodd" points="240.047,208 240.047,336 272.047,336 272.047,208 320.047,208 256.047,128 192.047,208 "></polygon> </g> </g></svg>
+                                                    <!-- File Input -->
+                                                    <input type="file" id="qrLogoInput" style="display:none" accept="image/png, image/jpeg">
+                                                    <svg class="remove-qr-icon" onclick="ConfirmQRLogoRemove('uploadedQRLogoVideoFiles','txtsharelinkVideoFiles')" width="32px" height="32px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <title>Remove QR Icon</title>
+                                                        <rect width="32" height="32" fill="none"></rect>
+                                                        <path d="M5 7.5H19L18 21H6L5 7.5Z" stroke="none" stroke-linejoin="round"></path>
+                                                        <path d="M15.5 9.5L15 19" stroke="none" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        <path d="M12 9.5V19" stroke="none" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        <path d="M8.5 9.5L9 19" stroke="none" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        <path d="M16 5H19C20.1046 5 21 5.89543 21 7V7.5H3V7C3 5.89543 3.89543 5 5 5H8M16 5L15 3H9L8 5M16 5H8" stroke="none" stroke-linejoin="round"></path>
+                                                    </svg>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="d-f" style="flex-wrap: wrap; margin-top: 8px;">
+                                            <label class="my-chk-container">
+                                                In the Spotlight
+                                                <input type="checkbox" onclick="ToggleIsSpotlight('chkIsSpotlightVideoFile','txtsharelinkVideoFiles')" id="chkIsSpotlightVideoFile">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </div>
+                                        <div class="uploaded-file disable-block" style="display:none;" id="previewFile">
+                                            <span class="field-lbl">Uploaded File:</span>
+                                            <div class="d-f a-i-c" style="overflow:hidden;">
+                                                <img src="/images/add-file-2.svg" alt="Uploaded File" title="Uploaded File" style="margin-right:3px;" />
+                                                <p class="m-0 f-12" id="preFileName" style="font-weight:bold;"></p>
+                                            </div>
+                                            <img src="/images/trash-icon.svg" alt="Delete File" onclick="DeleteUploadedFile()" title="Delete File" style="cursor:pointer;" />
+                                        </div>
+                                        <div class="" id="dropzone">
+                                            <div class="dropzone" id="Videouploader"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @* Downloads (PDF Files) *@
+                                <div>
+                                    <div class="edit-panel-acc">
+                                        <label class="my-chk-container" style="margin:0; font-weight:bold">
+                                            Downloads (PDF Files)
+                                            <input type="checkbox" id="chkDownloadFiles">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                        <div class="acc-icon">
+                                            <img src="~/images/plus.svg" id="plus-icon-download-pdf" onclick="ExpendContentPanel('download-pdf')" />
+                                            <img src="~/images/minus.svg" id="minus-icon-download-pdf" onclick="CollapseContentPanel('download-pdf')" style="display:none;" />
+                                        </div>
+                                    </div>
+                                    <div class="download-pdf disable-block" id="download-pdf" style="display:none; margin-top: 10px;">
+                                        <div style="display: flex;justify-content: space-around;">
+                                            <div class="field-wrap share-link" style="width:1%; flex-grow:1;">
+                                                <span class="field-lbl">Marketing Link(PAYMENT):</span>
+                                                <input type="text" class="txt-box" id="txtsharelinkPDFiles" readonly autocomplete="off">
+                                                <img src="/images/copy-icon.svg" class="share-link-icon" alt="Copy Link" title="Copy Link" onclick="copyShareURL(this);" />
+                                            </div>
+                                            @*QR Image*@
+                                            <div id="imageQR-PDFiles" style="display:none;position: relative;width: 44px;margin-left: 5px;">
+                                                <img src="~/images/sampleQR.png" class="redirect-qr" alt="QR Code" title="QR Code" id="imageQRPDFiles" onclick="QRPopup('imageQRPDFiles');" />
+                                            </div>
+
+                                            @*QR Text*@
+                                            <div style="display:flex;" id="qrtext-PDFiles" class="qr-container">QR Code</div>
+                                            <div class="preview-btn-wrap" style="margin-left:5px;">
+                                                <button class="preview-btn" id="songPrev" onclick="PreviewSongs('txtsharelinkPDFiles');">
+                                                    <svg fill="none" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30px" height="30px" viewBox="0 0 92 92" enable-background="new 0 0 92 92" xml:space="preserve" stroke="none"><g id="SVGRepo_bgCarrier" stroke-width="0" /><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" /><g id="SVGRepo_iconCarrier"> <path id="XMLID_1239_" d="M91.3,43.8C90.6,42.8,74.4,19,46,19C17.6,19,1.4,42.8,0.7,43.8c-0.9,1.3-0.9,3.1,0,4.5 C1.4,49.2,17.6,73,46,73c28.4,0,44.6-23.8,45.3-24.8C92.2,46.9,92.2,45.1,91.3,43.8z M46,65C26.7,65,13.5,51.4,9,46 c4.5-5.5,17.6-19,37-19c19.3,0,32.5,13.6,37,19C78.4,51.5,65.3,65,46,65z M48.3,29.6c-4.4-0.6-8.7,0.5-12.3,3.2c0,0,0,0,0,0 c-7.3,5.5-8.8,15.9-3.3,23.2c2.7,3.6,6.5,5.8,10.9,6.5c0.8,0.1,1.6,0.2,2.3,0.2c3.6,0,7-1.2,9.9-3.3c7.3-5.5,8.8-15.9,3.3-23.2 C56.6,32.5,52.7,30.2,48.3,29.6z M52.3,54.5c-2.2,1.7-5,2.4-7.8,2c-2.8-0.4-5.3-1.9-7-4.1C34.1,47.7,35,41,39.7,37.5 c2.2-1.7,5-2.4,7.8-2c2.8,0.4,5.3,1.9,7,4.1C57.9,44.3,57,51,52.3,54.5z M51.9,40c0.8,0.7,1.2,1.8,1.2,2.8c0,1-0.4,2.1-1.2,2.8 c-0.7,0.7-1.8,1.2-2.8,1.2c-1.1,0-2.1-0.4-2.8-1.2c-0.8-0.8-1.2-1.8-1.2-2.8c0-1.1,0.4-2.1,1.2-2.8c0.7-0.8,1.8-1.2,2.8-1.2 C50.2,38.9,51.2,39.3,51.9,40z" /> </g></svg>
+                                                    Preview
+                                                </button>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="d-f j-c-sw w-50 qr-icon-panel">
+                                            <div class="field-wrap m-0" style="min-height: 56px;">
+                                                <span class="field-lbl" style="position: relative;top: -3px;left: 0;">Choose QR Color:</span>
+                                                <div class="d-f j-c-c">
+                                                    <input style="padding: 0; width: 40px; height: 34px;" class="txt-box" type="color" id="color-PDFiles" name="Color" onblur="saveQRColor('txtsharelinkPDFiles','color-PDFiles')" value="#000000">
+                                                    <input type="text" id="colorBox-PDFiles" readonly="" class="txt-box" style="width: 1%;flex-grow: 1; margin-left: 10px;height: 34px;padding:10px 10px 8px 10px;">
+                                                </div>
+                                            </div>
+                                            <div class="field-wrap m-0" style="border-left:1px solid #ccc;min-height: 56px;">
+                                                <span class="field-lbl" style="position: relative;top: -3px;left: 5px;">Choose QR Icon:</span>
+
+                                                <div class="d-f j-c-sa">
+                                                    <div class="qr-icon-previw">
+                                                        <img src="/images/image-icon.svg?t=1755788573581" id="uploadedQRLogoPDFiles" alt="QR Icon" title="QR Icon">
+                                                    </div>
+                                                    <svg title="Upload Icon" onclick="UploadQRlogo('txtsharelinkPDFiles','uploadedQRLogoPDFiles');" class="upload-qr-icon" fill="none" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="32px" height="32px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"> <title>Upload QR Icon</title><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M256,0C114.609,0,0,114.609,0,256s114.609,256,256,256s256-114.609,256-256S397.391,0,256,0z M256,472 c-119.297,0-216-96.703-216-216S136.703,40,256,40s216,96.703,216,216S375.297,472,256,472z"></path> <g> <polygon fill-rule="evenodd" clip-rule="evenodd" points="352,320 352,352 256,352 160,352 160,320 128,320 128,384 384,384 384,320 "></polygon> <polygon fill-rule="evenodd" clip-rule="evenodd" points="240.047,208 240.047,336 272.047,336 272.047,208 320.047,208 256.047,128 192.047,208 "></polygon> </g> </g></svg>
+                                                    <!-- File Input -->
+                                                    <input type="file" id="qrLogoInput" style="display:none" accept="image/png, image/jpeg">
+                                                    <svg class="remove-qr-icon" onclick="ConfirmQRLogoRemove('uploadedQRLogoPDFiles','txtsharelinkPDFiles')" width="32px" height="32px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <title>Remove QR Icon</title>
+                                                        <rect width="32" height="32" fill="none"></rect>
+                                                        <path d="M5 7.5H19L18 21H6L5 7.5Z" stroke="none" stroke-linejoin="round"></path>
+                                                        <path d="M15.5 9.5L15 19" stroke="none" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        <path d="M12 9.5V19" stroke="none" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        <path d="M8.5 9.5L9 19" stroke="none" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        <path d="M16 5H19C20.1046 5 21 5.89543 21 7V7.5H3V7C3 5.89543 3.89543 5 5 5H8M16 5L15 3H9L8 5M16 5H8" stroke="none" stroke-linejoin="round"></path>
+                                                    </svg>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="d-f" style="flex-wrap: wrap; margin-top: 8px;">
+                                            <label class="my-chk-container">
+                                                In the Spotlight
+                                                <input type="checkbox" onclick="ToggleIsSpotlight('chkIsSpotlightPDFile','txtsharelinkPDFiles')" id="chkIsSpotlightPDFile">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </div>
+                                        <div class="uploaded-file" style="display:none;" id="previewFile">
+                                            <span class="field-lbl">Uploaded File:</span>
+                                            <div class="d-f a-i-c" style="overflow:hidden;">
+                                                <img src="/images/add-file-2.svg" alt="Uploaded File" title="Uploaded File" style="margin-right:3px;" />
+                                                <p class="m-0 f-12" id="preFileName" style="font-weight:bold;"></p>
+                                            </div>
+                                            <img src="/images/trash-icon.svg" alt="Delete File" onclick="DeleteUploadedFile()" title="Delete File" style="cursor:pointer;" />
+                                        </div>
+                                        <div class="" id="dropzone">
+                                            <div  class="dropzone" id="Filesuploader"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @* Redirector (URL Location) *@
+                                <div>
+                                    <div class="edit-panel-acc">
+                                        <label class="my-chk-container" style="margin:0; font-weight:bold">
+                                            Redirector (URL Location)
+                                            <input type="checkbox" id="chkRedirector">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                        <div class="acc-icon">
+                                            <img src="~/images/plus.svg" id="plus-icon-redirector" onclick="ExpendContentPanel('redirector')" />
+                                            <img src="~/images/minus.svg" id="minus-icon-redirector" onclick="CollapseContentPanel('redirector')" style="display:none;" />
+                                        </div>
+                                    </div>
+                                    <div class="redirector" id="redirector" style="display:none; margin-top: 10px;">
+                                        <div style="display: flex;justify-content: space-around;">
+                                            <div class="field-wrap share-link" style="width:1%; flex-grow:1;">
+                                                <span class="field-lbl">Marketing Link(PAYMENT):</span>
+                                                <input type="text" class="txt-box" id="txtsharelink" readonly autocomplete="off">
+                                                <img src="/images/copy-icon.svg" class="share-link-icon" alt="Copy Link" title="Copy Link" onclick="copyShareURL(this);" />
+                                            </div>
+                                         
+                                            <div class="preview-btn-wrap" style="margin-left:5px;">
+                                                <button class="preview-btn" id="songPrev" onclick="PreviewSongs('txtsharelink');">
+                                                    <svg fill="none" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30px" height="30px" viewBox="0 0 92 92" enable-background="new 0 0 92 92" xml:space="preserve" stroke="none"><g id="SVGRepo_bgCarrier" stroke-width="0" /><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" /><g id="SVGRepo_iconCarrier"> <path id="XMLID_1239_" d="M91.3,43.8C90.6,42.8,74.4,19,46,19C17.6,19,1.4,42.8,0.7,43.8c-0.9,1.3-0.9,3.1,0,4.5 C1.4,49.2,17.6,73,46,73c28.4,0,44.6-23.8,45.3-24.8C92.2,46.9,92.2,45.1,91.3,43.8z M46,65C26.7,65,13.5,51.4,9,46 c4.5-5.5,17.6-19,37-19c19.3,0,32.5,13.6,37,19C78.4,51.5,65.3,65,46,65z M48.3,29.6c-4.4-0.6-8.7,0.5-12.3,3.2c0,0,0,0,0,0 c-7.3,5.5-8.8,15.9-3.3,23.2c2.7,3.6,6.5,5.8,10.9,6.5c0.8,0.1,1.6,0.2,2.3,0.2c3.6,0,7-1.2,9.9-3.3c7.3-5.5,8.8-15.9,3.3-23.2 C56.6,32.5,52.7,30.2,48.3,29.6z M52.3,54.5c-2.2,1.7-5,2.4-7.8,2c-2.8-0.4-5.3-1.9-7-4.1C34.1,47.7,35,41,39.7,37.5 c2.2-1.7,5-2.4,7.8-2c2.8,0.4,5.3,1.9,7,4.1C57.9,44.3,57,51,52.3,54.5z M51.9,40c0.8,0.7,1.2,1.8,1.2,2.8c0,1-0.4,2.1-1.2,2.8 c-0.7,0.7-1.8,1.2-2.8,1.2c-1.1,0-2.1-0.4-2.8-1.2c-0.8-0.8-1.2-1.8-1.2-2.8c0-1.1,0.4-2.1,1.2-2.8c0.7-0.8,1.8-1.2,2.8-1.2 C50.2,38.9,51.2,39.3,51.9,40z" /> </g></svg>
+                                                    Preview
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div style="display: flex;justify-content: space-around;">
+                                            <div class="field-wrap share-link" style="width:1%; flex-grow:1;">
+                                                <span class="field-lbl">Redirect To:</span>
+                                                <input type="text" class="txt-box" id="txtRedirectURL"  autocomplete="off">
+                                               
+                                            </div>
+                                            @*QR Image*@
+                                            <div id="imageQR-Redirect" style="display:none;position: relative;width: 44px;margin-left: 5px;">
+                                                <img src="~/images/sampleQR.png" class="redirect-qr" alt="QR Code" title="QR Code" id="imageQRRedirect" onclick="QRPopup('imageQRRedirect');" />
+                                            </div>
+
+                                            @*QR Text*@
+                                            <div style="display:flex;" id="qrtext-Redirect" class="qr-container">QR Code</div>
+                                           
+                                        </div>
+
+                                        <div class="d-f j-c-sw w-50 qr-icon-panel">
+                                            <div class="field-wrap m-0" style="min-height: 56px;">
+                                                <span class="field-lbl" style="position: relative;top: -3px;left: 0;">Choose QR Color:</span>
+                                                <div class="d-f j-c-c">
+                                                    <input style="padding: 0; width: 40px; height: 34px;" class="txt-box" type="color" id="color-redirector" name="Color" onblur="saveQRColor('txtsharelink','color-redirector')" value="#000000">
+                                                    <input type="text" id="colorBox-redirector" readonly="" class="txt-box" style="width: 1%;flex-grow: 1; margin-left: 10px;height: 34px;padding:10px 10px 8px 10px;">
+                                                </div>
+                                            </div>
+                                            <div class="field-wrap m-0" style="border-left:1px solid #ccc;min-height: 56px;">
+                                                <span class="field-lbl" style="position: relative;top: -3px;left: 5px;">Choose QR Icon:</span>
+
+                                                <div class="d-f j-c-sa">
+                                                    <div class="qr-icon-previw">
+                                                        <img src="/images/image-icon.svg?t=1755788573581" id="uploadedQRLogoRedirect" alt="QR Icon" title="QR Icon">
+                                                    </div>
+                                                    <svg title="Upload Icon" onclick="UploadQRlogo('txtsharelink','uploadedQRLogoRedirect');" class="upload-qr-icon" fill="none" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="32px" height="32px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"> <title>Upload QR Icon</title><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M256,0C114.609,0,0,114.609,0,256s114.609,256,256,256s256-114.609,256-256S397.391,0,256,0z M256,472 c-119.297,0-216-96.703-216-216S136.703,40,256,40s216,96.703,216,216S375.297,472,256,472z"></path> <g> <polygon fill-rule="evenodd" clip-rule="evenodd" points="352,320 352,352 256,352 160,352 160,320 128,320 128,384 384,384 384,320 "></polygon> <polygon fill-rule="evenodd" clip-rule="evenodd" points="240.047,208 240.047,336 272.047,336 272.047,208 320.047,208 256.047,128 192.047,208 "></polygon> </g> </g></svg>
+                                                    <!-- File Input -->
+                                                    <input type="file" id="qrLogoInput" style="display:none" accept="image/png, image/jpeg">
+                                                    <svg class="remove-qr-icon" onclick="ConfirmQRLogoRemove('uploadedQRLogoRedirect','txtsharelink')" width="32px" height="32px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <title>Remove QR Icon</title>
+                                                        <rect width="32" height="32" fill="none"></rect>
+                                                        <path d="M5 7.5H19L18 21H6L5 7.5Z" stroke="none" stroke-linejoin="round"></path>
+                                                        <path d="M15.5 9.5L15 19" stroke="none" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        <path d="M12 9.5V19" stroke="none" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        <path d="M8.5 9.5L9 19" stroke="none" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        <path d="M16 5H19C20.1046 5 21 5.89543 21 7V7.5H3V7C3 5.89543 3.89543 5 5 5H8M16 5L15 3H9L8 5M16 5H8" stroke="none" stroke-linejoin="round"></path>
+                                                    </svg>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="file-upload-btn">
+                        <button class="cp-btn" style="height:36px;" id="txtsavebtn" onclick="saveFileDetails()">Save</button>
+                        <button class="cp-btn" style="height:36px; display:none;" id="txtupdatebtn" onclick="updateFileDetails()">Update</button>
+                    </div>
+                </div>
+
+            </div>
+            <div class="right-bar">
+                <div class="mic-wrap" onclick="openrightnav()" style="margin: 15px auto 0;">
+                    <img class="edit-icon" src="~/images/edit-icon.svg" title="Open Edit Panel" />
+                    <img class="close-edit-panel" src="~/images/cross-icon.svg" title="Close Edit Panel" />
+                </div>
+                <div class="qr-btn" onclick="togglePanel();" id="qr-btn" style="display:none">
+                    <img src="~/images/sampleQR.png" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+    @* delete confirmation popup *@
+    <div class="cust-overlay" id="DeleteMessagePopup" style="display:none;">
+        <div class="cust-popup">
+            <div class="cust-popup-inner">
+                <div class="close-popup" style="width:20px;height:20px;" title="Close" onclick="hideDeletePopup()">
+                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 122.879 122.879" enable-background="new 0 0 122.879 122.879" xml:space="preserve"><g><path fill-rule="evenodd" clip-rule="evenodd" fill="#fff" d="M61.44,0c33.933,0,61.439,27.507,61.439,61.439 s-27.506,61.439-61.439,61.439C27.507,122.879,0,95.372,0,61.439S27.507,0,61.44,0L61.44,0z M73.451,39.151 c2.75-2.793,7.221-2.805,9.986-0.027c2.764,2.776,2.775,7.292,0.027,10.083L71.4,61.445l12.076,12.249 c2.729,2.77,2.689,7.257-0.08,10.022c-2.773,2.765-7.23,2.758-9.955-0.013L61.446,71.54L49.428,83.728 c-2.75,2.793-7.22,2.805-9.986,0.027c-2.763-2.776-2.776-7.293-0.027-10.084L51.48,61.434L39.403,49.185 c-2.728-2.769-2.689-7.256,0.082-10.022c2.772-2.765,7.229-2.758,9.953,0.013l11.997,12.165L73.451,39.151L73.451,39.151z" /></g></svg>
+                </div>
+                <div class="gpt-img"><img src="~/images/dustbin.png" /></div>
+                <div class="popup-content">
+                    <p>Are you sure, you want to delete this item?</p>
+                </div>
+            </div>
+            <div class="popup-btn-panel">
+                <button onclick="DeleteMemoryData()">DELETE</button>
+                <button onclick="hideDeletePopup()">CANCEL</button>
+            </div>
+        </div>
+    </div>
+    @*Create folder*@
+    <div class="cust-overlay" id="FolderPopup" style="display:none;">
+        <div class="cust-popup">
+            <div class="close-video-popup" onclick="closeFolderPopup()"><img src="/Images/close-circle.svg" title="Close" alt="Close" onclick="closeFolderPopup()" /></div>
+            <div class="popup-header">
+                <div class="popup-header-icon">
+                    <img src="/images/folder-add-2.svg" />
+                </div>
+                <p>Create New Folder</p>
+            </div>
+            <div class="popup-inner">
+                <div class="field-wrap">
+                    <span class="field-lbl">Folder Name:*</span>
+                    <input type="text" class="txt-box" id="txtfoldername" placeholder="Enter Folder Name" autocomplete="off" maxlength="63" />
+                    <span id="folderNameError" style="display: none;"></span>
+                </div>
+            </div>
+            <div class="popup-btn-panel" style="border-top: 1px solid #dedede;">
+                <button onclick="closeFolderPopup()">Cancel</button>
+                <button onclick="createNewFolder('txtfoldername')">Create</button>
+                <input type="hidden" id="selectedFolderId" />
+                <input type="hidden" id="ParentFolderId" />
+                <input type="hidden" id="isParent" />
+                <input type="hidden" id="hdnid" />
+                <input type="hidden" id="level" />
+                <input type="hidden" id="IsRoot" />
+                <input type="hidden" id="hdnfoldername" />
+
+            </div>
+        </div>
+    </div>
+    @*Create file*@
+    <div class="cust-overlay" id="FilePopup" style="display:none;">
+        <div class="cust-popup">
+            <div class="close-video-popup" onclick="closeFilePopup()"><img src="/Images/close-circle.svg" title="Close" alt="Close" onclick="closeFilePopup()" /></div>
+            <div class="popup-header">
+                <div class="popup-icon">
+                    <img src="/images/folder-add-2.svg" />
+                </div>
+                <p>Create New File</p>
+            </div>
+            <div class="popup-inner">
+                <div class="field-wrap">
+                    <span class="field-lbl">File Name:</span>
+                    <input type="text" class="txt-box" id="filename" placeholder="Enter File Name" autocomplete="off" />
+                </div>
+            </div>
+            <div class="popup-btn-panel" style="border-top: 1px solid #dedede;">
+                <button onclick="closeFilePopup()">Cancel</button>
+                <button onclick="createNewFolder('filename')">Create</button>
+                <input type="hidden" id="selectedFolderId" />
+                <input type="hidden" id="ParentFolderId" />
+                <input type="hidden" id="isParent" />
+                <input type="hidden" id="hdnid" />
+                <input type="hidden" id="level" />
+                <input type="hidden" id="IsRoot" />
+                <input type="hidden" id="hdnfoldername" />
+
+            </div>
+        </div>
+    </div>
+    @*Update Cover Confirm Popup*@
+    <div class="cust-overlay" id="AlbumConfirmPopup" style="display:none;">
+        <div class="cust-popup">
+            <div class="cust-popup-inner">
+                <div class="close-popup" style="width:20px;height:20px;" title="Close" onclick="hideAlbumConfirmPopup()">
+                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 122.879 122.879" enable-background="new 0 0 122.879 122.879" xml:space="preserve"><g><path fill-rule="evenodd" clip-rule="evenodd" fill="#fff" d="M61.44,0c33.933,0,61.439,27.507,61.439,61.439 s-27.506,61.439-61.439,61.439C27.507,122.879,0,95.372,0,61.439S27.507,0,61.44,0L61.44,0z M73.451,39.151 c2.75-2.793,7.221-2.805,9.986-0.027c2.764,2.776,2.775,7.292,0.027,10.083L71.4,61.445l12.076,12.249 c2.729,2.77,2.689,7.257-0.08,10.022c-2.773,2.765-7.23,2.758-9.955-0.013L61.446,71.54L49.428,83.728 c-2.75,2.793-7.22,2.805-9.986,0.027c-2.763-2.776-2.776-7.293-0.027-10.084L51.48,61.434L39.403,49.185 c-2.728-2.769-2.689-7.256,0.082-10.022c2.772-2.765,7.229-2.758,9.953,0.013l11.997,12.165L73.451,39.151L73.451,39.151z" /></g></svg>
+                </div>
+                <div class="popup-icon">
+                    <img src="~/images/cover-image.svg" style="width:36px;" />
+                </div>
+                <div class="popup-content" style="width: 1%; flex-grow: 1;">
+                    <p>Updating the cover will apply to the entire album. Do you want to continue?</p>
+                </div>
+            </div>
+            <div class="popup-btn-panel">
+                <button onclick="uploadAlbumCover()" style="display:block;" >CONTINUE</button>
+                <button onclick="hideAlbumConfirmPopup()">CANCEL</button>
+            </div>
+        </div>
+    </div>
+    @*Delete Popup*@
+    <div class="cust-overlay" id="DeleteFolderPopup" style="display:none;">
+        <div class="cust-popup">
+            <div class="cust-popup-inner">
+                <div class="close-popup" style="width:20px;height:20px;" title="Close" onclick="hideDeletePopup()">
+                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 122.879 122.879" enable-background="new 0 0 122.879 122.879" xml:space="preserve"><g><path fill-rule="evenodd" clip-rule="evenodd" fill="#fff" d="M61.44,0c33.933,0,61.439,27.507,61.439,61.439 s-27.506,61.439-61.439,61.439C27.507,122.879,0,95.372,0,61.439S27.507,0,61.44,0L61.44,0z M73.451,39.151 c2.75-2.793,7.221-2.805,9.986-0.027c2.764,2.776,2.775,7.292,0.027,10.083L71.4,61.445l12.076,12.249 c2.729,2.77,2.689,7.257-0.08,10.022c-2.773,2.765-7.23,2.758-9.955-0.013L61.446,71.54L49.428,83.728 c-2.75,2.793-7.22,2.805-9.986,0.027c-2.763-2.776-2.776-7.293-0.027-10.084L51.48,61.434L39.403,49.185 c-2.728-2.769-2.689-7.256,0.082-10.022c2.772-2.765,7.229-2.758,9.953,0.013l11.997,12.165L73.451,39.151L73.451,39.151z" /></g></svg>
+                </div>
+                <div class="popup-icon">
+                    <img src="~/images/delete-file.svg" />
+                </div>
+                <div class="popup-content">
+                    <p>Are you sure, you want to delete this <span id="spnSelType"></span> ?</p>
+                </div>
+            </div>
+            <div class="popup-btn-panel">
+                <button onclick="DeleteFolder()" style="display:block;" id="deleteFolder">DELETE</button>
+                <button onclick="RemoveQRLogo()" style="display:none;" id="delteQRicon">DELETE</button>
+                <button onclick="hideDeletePopup()">CANCEL</button>
+                <input type="hidden" id="hdnid" />
+                <input type="hidden" id="hdnRootId" />
+                <input type="hidden" id="level" />
+                <input type="hidden" id="IsFolder" />
+                <input type="hidden" id="hdnfoldername" />
+            </div>
+        </div>
+    </div>
+    @* QRCoder Popup *@
+    <div class="cust-overlay" id="QRPopup" style="display:none;">
+        <div class="cust-popup" style="max-width:320px;">
+            <div class="close-video-popup" onclick="closeQRPopup()"><img src="/Images/close-circle.svg" title="Close" alt="Close" onclick="closeFolderPopup()" /></div>
+            <div class="popup-header">
+                <div class="popup-icon">
+                    <img src="/images/qr-code.svg" class="m-0" />
+                </div>
+                <p>QR Code</p>
+            </div>
+            <div class="popup-inner">
+                <div class="qrcode-wrapper">
+                    <div class="qrcode-wrapper-inner">
+                        <img src="@("../QRCodeImages/QRCode.png?v=" + DateTime.Now.ToString("ddMMyyyyhhmmsstt"))" id="imgQR" alt="QR Code">
+                    </div>
+                </div>
+            </div>
+            <div class="popup-btn-panel" style="border-top: 1px solid #dedede;">
+                <button onclick="closeQRPopup()">Cancel</button>
+                <button onclick="downloadQRImage()" class="d-f a-i-c j-c-c">
+                    <svg width="24px" height="24px" viewBox="0 4 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 16L12 8" stroke="" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M9 13L11.913 15.913V15.913C11.961 15.961 12.039 15.961 12.087 15.913V15.913L15 13" stroke="" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M3 15L3 16L3 19C3 20.1046 3.89543 21 5 21L19 21C20.1046 21 21 20.1046 21 19L21 16L21 15" stroke="" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </button>
+                <input type="hidden" id="selectedFolderId" />
+                <input type="hidden" id="ParentFolderId" />
+                <input type="hidden" id="isParent" />
+                <input type="hidden" id="hdnid" />
+                <input type="hidden" id="level" />
+                <input type="hidden" id="IsRoot" />
+                <input type="hidden" id="hdnfoldername" />
+                <input type="hidden" id="hdnproductID" />
+
+            </div>
+        </div>
+    </div>
+    @* Author Popup *@
+    <div class="cust-overlay" id="Authorpopup" style="display:none;">
+        <div class="cust-popup" style="max-width:450px;">
+            <div class="close-video-popup" onclick="closeAuthorPopup()"><img src="/Images/close-circle.svg" title="Close" alt="Close" onclick="closeAuthorPopup()" /></div>
+            <div class="popup-header">
+                <div class="popup-icon" style="border-color:#000;">
+                    <img src="/images/author.png" class="m-0" style="width:36px;" />
+                </div>
+                <p>Move Author</p>
+            </div>
+            <div class="popup-inner" style="padding-bottom:30px;">
+                <div>
+                    <p><strong>Move Author "<span id="SpnauthName"></span>" to:</strong></p>
+                    <select class="txt-box" id="ddlStore" style="height: 46px;padding: 10px 20px 10px 10px;">
+                        <option value="">-- Select Store --</option>
+                    </select>
+                </div>
+            </div>
+            <div class="popup-btn-panel" style="border-top: 1px solid #dedede; justify-content:center;">
+                <button onclick="closeAuthorPopup()">Cancel</button>
+                <button onclick="submitSelectedStore()">Move</button>
+            </div>
+        </div>
+    </div>
+    @* Product Thumbnail Popup *@
+    @* <div class="cust-overlay" id="ThumbnailPopup" style="display:none;">
+        <div class="cust-popup" style="max-width:320px;">
+            <div class="close-video-popup" onclick="closeThumbnailPopup()"><img src="/Images/close-circle.svg" title="Close" alt="Close" onclick="closeThumbnailPopup()" /></div>
+            <div class="popup-header">
+
+                <p>Product Image Preview</p>
+            </div>
+            <div class="popup-inner">
+                <div class="product-img-wrapper">
+                    <img src="@("../QRCodeImages/QRCode.png?v=" + DateTime.Now.ToString("ddMMyyyyhhmmsstt"))" id="ThumbnailPreview" alt="Thumbnail Preview">
+                </div>
+            </div>
+            <div class="popup-btn-panel" style="border-top: 1px solid #dedede;">
+                <button id="confirmThumbnailUpload"  style="pointer-events:none; filter:grayscale(1);">Upload</button>
+                <button onclick="uploadThumbnail()" title="Upload Image" class="d-f a-i-c j-c-c">
+                    Select Image
+                </button>
+            </div>
+        </div>
+    </div> *@
+    @*Hidden fields*@
+    <input type="hidden" id="hdnshareID" />
+}
+@* --------------------------------------------Preview Section----------------------------------------------- *@
+@* for the purpose to bind preview *@
+<div id="preview">
+</div>
+
+@* for the purpose to show loader while moving store *@
+<div class="loader" style="display:none;" id="storeLoader">
+    <img src="~/images/spinner.svg" />
+    <p>Moving author to selected store...</p>
+</div>
+
+
+
+
+@*Script*@
+<script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+<script src="~/js/common.js" asp-append-version="true"></script>
+<script src="~/js/shareredirector/shareredirector.js" asp-append-version="true"></script>
+@* <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script> *@
+<script src="~/js/shareredirector/dropzone.min.js" asp-append-version="true"></script>

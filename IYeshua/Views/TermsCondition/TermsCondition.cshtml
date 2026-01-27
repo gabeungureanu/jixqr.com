@@ -1,0 +1,208 @@
+﻿@{
+    Layout = null;
+    ViewData["Title"] = "Terms of Use";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    @{
+        switch (@ViewBag.DomainName.ToLower())
+        {
+            case "askjubileegpt.com":
+                <title>GPT: Jubilee - @ViewData["Title"]</title>
+                break;
+            default:
+                <title>JubileeChat - @ViewData["Title"]</title>
+                break;
+        }
+    }
+
+    <link href="~/css/main.css" rel="stylesheet" type="text/css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700,800%7CMontserrat:400,700" rel="stylesheet" type="text/css" />
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.min.css' asp-append-version="true" />
+    <link href="~/css/icons.min.css" rel="stylesheet" asp-append-version="true" />
+    <link rel="shortcut icon" href="" id="lnkFavicon" asp-append-version="true" />
+    <style>
+        .top-bar {            
+            border-bottom: 1px solid #e5e5e5;
+        }
+    </style>
+</head>
+<body>
+    @await Html.PartialAsync("~/Views/Shared/_Header.cshtml")
+    <div class="page-container">
+        @* <div class="top-bar fixed-top-bar">
+        <div class="header-logo"><a href="/" class="ancLogo"></a></div>
+        <a href="/" title="Back to Home" style="display:flex; align-items:center;">
+        <i class="mdi mdi-arrow-left" style="font-size: 24px;margin-right:10px;"></i> Back
+        </a>
+        </div>*@
+        <div class="header-logo">
+            <a href="/" title="Back to Home" style="display:flex; align-items:center; font-size: 20px;">
+                <i class="mdi mdi-arrow-left" style="font-size: 24px;margin-right:10px; font-size: 20px;"></i> Back
+            </a>
+        </div>
+        <div class="page-content">
+
+            <h1 class="page-heading">Terms of Use</h1>
+            <p>
+                These TERMS OF USE ("TOU") govern your use of the Web site known as <span class="webName"></span> ("Site"). Please read these Terms of Use carefully. By accessing, browsing and/or using this Site, you acknowledge that you have read, understood, and agree to be bound by these terms and to comply with all applicable laws and regulations. If you do not agree to these terms, do not use this Site. <span class="webName"></span> may modify these Terms of Use at any time in its sole discretion by updating this posting. The terms "You", "Your" and "User" as used herein refer to all persons and/or entities using this Site for any reason. The term "<span class="webName"></span>" is defined as all English language United States based web sites, web pages and channels owned, controlled, and/or operated by <span class="webName"></span> or any of its subsidiaries, affiliates, and licenses.
+            </p>
+            <p>
+                The contents of this Site, including, without limitation, the "look and feel" of the Site, images, logos, text, software, databases, and other material and content and the compilation of it (meaning the collection, arrangement and assembly) (together "Material") are protected under both United States and foreign copyright, trademark and other laws. All Material is the exclusive property and intellectual property of <span class="webName"></span> or its content suppliers. <span class="webName"></span> makes no representation that Material in the Site are appropriate or available for use in other locations, and access to them from territories where their contents are illegal and is prohibited. Those who choose to access this Site from other locations do so on their own initiative and are responsible for compliance with applicable local laws.
+            </p>
+            <p>
+                Any claim relating to, and the use of, this Site and the materials contained herein is governed by the laws of the state of California. Jurisdiction for any claims arising under Your use of this Site shall lie exclusively with the state or federal courts within Sacramento, California.
+            </p>
+            <h4>
+                USE RESTRICTIONS
+            </h4>
+            <p>
+                The copyright in all material provided on this Site is held by <span class="webName"></span> or by the original creator of the material. Except as stated herein, none of the material may be copied, reproduced, distributed, republished, downloaded, displayed, posted or transmitted in any form or by any means, including, but not limited to, electronic, mechanical, photocopying, recording, or otherwise, without the prior written permission of <span class="webName"></span>. Permission is granted to display, copy, distribute and download the materials on this Site for personal, non-commercial use only, provided You do not modify the materials and that You retain all copyright and other proprietary notices contained in the materials. This permission terminates automatically if You breach any of these terms or conditions. Upon termination, You must immediately destroy any downloaded and printed materials. You also may not, without <span class="webName"></span>'s permission, "mirror" any material contained on this Site on any other server. Any unauthorized use of any material contained on this Site may violate copyright laws, trademark laws, the laws of privacy and publicity, and communications regulations and statutes.
+            </p>
+            <h4>
+                MATERIAL USE
+            </h4>
+            <p>
+                <span class="webName"></span> authorizes You to view, a single copy of the Material on this Site solely for Your personal, noncommercial, or internal business purposes. You must retain all copyright, trademark, service mark and other proprietary notices contained in the original Material on any copy You make of the Material (but You may only make such copies as expressly authorized by these Terms of Use). Unauthorized use of the Material may violate copyright, trademark and other laws. You may not modify, copy, transmit, create derivative works from, reverse engineer, disassemble, or otherwise attempt to discover any source code from any software accessible or available through <span class="webName"></span>, or sell, assign, sub-license or otherwise transfer any right in such software. You may not distribute the Material to third parties or use it to create databases, directories, mailing or marketing lists or for any other purpose.
+            </p>
+            <p>
+                You may not incorporate the Material for any purpose into another database, search engine, any other web site or in a networked computer environment of any kind. You may not copy or adapt the HTML code that <span class="webName"></span> creates to generate its pages. Access to this Site is monitored. The requesting URLs, the machine originating the request and the time of the request may be logged for access statistics and security purposes. Use of this Site constitutes consent to such monitoring.
+            </p>
+            <h4>
+                USER INFORMATION
+            </h4>
+            <p>
+                <span class="webName"></span> may also make improvements and/or changes in the services described in this Site at any time without notice. Material on this Site may be changed, terminated, or updated without notice.
+                Any information or material sent to <span class="webName"></span> shall not be considered confidential. By sending <span class="webName"></span> any information or material, You grant <span class="webName"></span> an unrestricted, irrevocable right and license to use such information for its business purposes. Any feedback that You provide at this Site, including but not limited to, electronic and written correspondence, shall also be deemed to be non-confidential and can be used by <span class="webName"></span> without limitation.
+            </p>
+            <h4>
+                SCOPE OF PERMITTED SITE USE
+            </h4>
+            <p>
+                You may refer to the URL of this Site without limitation, but You may not link to this Site without the prior written approval of <span class="webName"></span>. The Site may only be used for lawful purposes. <span class="webName"></span> specifically prohibits any use of the Site, and all Users agree not to use the Site, for any of the following:
+            </p>
+            <p>
+                1) Posting or transmitting any message, information, data, text, software or images, or other material that may invade another's privacy or publicity rights or is unlawful, harmful, threatening, abusive, harassing, defamatory, libelous, vulgar, obscene, or otherwise objectionable in the opinion of <span class="webName"></span>.
+            </p>
+            <p>
+                2) Notwithstanding anything to the contrary contained herein, using or attempting to use any engine, software, tool, agent or other device or mechanism (including without limitation browsers, spiders, robots, avatars or intelligent agents) to navigate or search this Site other than the search engine and search agents available from <span class="webName"></span> on this Site and other than generally available third-party web browsers (e.g., Netscape Navigator, Microsoft Explorer).
+            </p>
+            <p>
+                3) Using any device, software or routine to interfere or attempt to interfere with the proper working of this Site or any activity being conducted on this Site and/or taking any action that imposes an unreasonable or disproportionately large load on this Site's infrastructure.
+            </p>
+            <p>
+                4) Other than as permitted expressly by these Terms of Use, framing, linking, copying or duplicating any of the materials or information available from the Site.
+            </p>
+            <p>
+                You may not use the Site in order to transmit, distribute, erase, or store material: (a) in violation of any applicable law or regulation; (b) in a manner that will infringe the patent, copyright, trademark, trade secret or other intellectual property rights of others or violate the privacy, publicity or other personal rights of others; or (c) that is harmful, defamatory, libelous, vulgar, obscene, threatening, abusive, harassing or otherwise objectionable in the opinion of <span class="webName"></span>. You are prohibited from violating or attempting to violate the security of the Site, including, without limitation: (a) attempting to probe, scan or test the vulnerability of a system or network or to breach security or authentication measures without proper authorization; (b) accessing data not intended for such user or logging into a server or account which the user is not authorized to access; (c) forging any TCP/IP packet header or any part of the header information in any e-mail or posting; (d) attempting to interfere with service to any user, host or network, including, without limitation, via means of submitting a virus or corrupted data to the Site, overloading, continuous posting of repetitive text, "flooding", "spamming", "mailbombing", or "crashing"; or (e) sending unsolicited e-mail, "junk mail", "chain letters", including promotional materials and/or advertising of products or services, or any other form of solicitation. Violations of system and network security may result in civil or criminal liability.
+            </p>
+            <h4>
+                SECURITY / NO DISRUPTION
+            </h4>
+            <p>
+                You are responsible for all activities that occur under Your password or account and will keep Your password(s) confidential. You will immediately notify us of any unauthorized use of Your password or account or any other breach of security. You will not disrupt the functioning of this Site, solicit another user's password, or otherwise act in a way that interferes with other users' use of this Site.
+            </p>
+            <h4>
+                LINKS TO OTHER MATERIALS
+            </h4>
+            <p>
+                The linked sites are not under the control of <span class="webName"></span> and <span class="webName"></span> is not responsible for the content of any linked site or any link contained in a linked site. <span class="webName"></span> reserves the right to terminate any link or linking program at any time. <span class="webName"></span> does not endorse companies or products to which it links and reserves the right to note as such on its web pages. If You decide to access any of the third-party sites linked to this Site, You do this entirely at your own risk.
+            </p>
+            <h4>
+                PROPRIETARY INFORMATION
+            </h4>
+            <p>
+                Certain portions of this Site contain information that is considered confidential and proprietary. This information is not available to the general public. Any attempt to access this information will be prosecuted to the fullest extent possible under local, state, national and international law. Nothing contained herein shall be construed as conferring by implication, estoppel or otherwise any license or right under any patent, copyright, trademark or other intellectual property right of <span class="webName"></span> or any third party, except as expressly granted herein.
+            </p>
+            <p>
+                <span class="webName"></span>'s logos and trademarks identify our products and/or services. You may make fair use of trademarks in advertising and promotional materials, and in referring to our products and/or services (for example, in a magazine article) without our permission, provided You follow standard copyright and/or trademark usage practices and provide proper attribution. Other uses require our written permission. Please make such requests using our contact form by visiting our Contact Us page.
+            </p>
+            <p>
+                You may never use our logos and trademarks in the following ways: (a) in a non-<span class="webName"></span> product name or publication title, (b) in, as, or as part of Your own trademarks, (c) to identify products or services that are not <span class="webName"></span>'s, (d) to cause confusion, (e) to suggest inaccurately that we sponsor, endorse, or are otherwise connected with Your activities, products, or services, (f) to disparage <span class="webName"></span>, and (g) in any other manner that <span class="webName"></span> or its users find offensive. Except as noted above, You may not use, copy, or redistribute <span class="webName"></span> logos without written or electronic permission from <span class="webName"></span>. If You do not have a pre-existing agreement with <span class="webName"></span>, You may request permission for logo use, but such permission is granted only infrequently. Send Your request for permission to use a <span class="webName"></span> logo by using our online form by visiting our Contact Us page, with "<span class="webName"></span> Logo Request" in the subject line.
+            </p>
+            <h4>
+                U.S. GOVERNMENT RESTRICTED RIGHTS
+            </h4>
+            <p>
+                The materials on this Site are provided with "RESTRICTED RIGHTS" use, duplication, or disclosure by the Government is subject to restrictions as set forth in applicable laws and regulations (FAR52.227-14 and DFAR252.227-7013 et seq. or its successor). Use of the materials by the Government constitutes acknowledgment of <span class="webName"></span>'s proprietary rights in them.
+            </p>
+            <h4>
+                INDEMNITY
+            </h4>
+            <p>
+                By using this Site, You agree to indemnify, hold harmless and defend <span class="webName"></span>, and its subsidiaries, affiliates, officers, agents, and employees from any claims, damages, losses, liabilities and all costs and expenses of defense, including but not limited to attorneys' fees, resulting directly or indirectly from Your use of this Site, unless such claims, damages, losses, liabilities, costs and expenses arise from and have directly and solely been caused by the gross negligence or intentionally wrongful acts of <span class="webName"></span>.
+            </p>
+            <h4>
+                DISCLAIMER
+            </h4>
+            <p>
+                THE MATERIALS ARE PROVIDED "AS IS" WITHOUT ANY EXPRESS OR IMPLIED WARRANTY OF ANY KIND INCLUDING WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT OF INTELLECTUAL PROPERTY, OR FITNESS FOR ANY PARTICULAR PURPOSE. IN NO EVENT SHALL <span style="text-transform:uppercase;" class="webName"></span> OR ITS SUPPLIERS BE LIABLE FOR ANY DAMAGES WHATSOEVER (INCLUDING, WITHOUT LIMITATION, DAMAGES FOR LOSS OF PROFITS, BUSINESS INTERRUPTION, LOSS OF INFORMATION) ARISING OUT OF THE USE OF OR INABILITY TO USE THE MATERIALS, EVEN IF <span style="text-transform:uppercase;" class="webName"></span> HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. BECAUSE SOME JURISDICTIONS PROHIBIT THE EXCLUSION OR LIMITATION OF LIABILITY FOR CONSEQUENTIAL OR INCIDENTAL DAMAGES, THE ABOVE LIMITATION MAY NOT APPLY TO YOU.
+            </p>
+            <p>
+                <span class="webName"></span> does not warrant the accuracy or completeness of the information, text, graphics, links or other items contained within these materials. <span class="webName"></span> may make changes to these materials, or to the services and products described therein, at any time without notice. <span class="webName"></span> makes no commitment to update the materials.
+            </p>
+            <p>
+                1) Your use of this Site is free of charge. Therefore this Site and all information within it are provided on an "as is" basis and <span class="webName"></span> makes and gives no conditions, representations, warranties, or other terms regarding the effectiveness this Site or the Material in meeting Your entrepreneurial objectives.
+            </p>
+            <p>
+                2) All conditions, warranties, undertakings, representations and other terms of any kind whatsoever, express or implied (whether by statute, common law or otherwise), in respect of the Site or the Material or in connection with them are hereby excluded by <span class="webName"></span> to the fullest extent permitted by law and <span class="webName"></span> shall have no obligation, duty or liability whatsoever to You.
+            </p>
+            <p>
+                3) Without prejudice to the generality of the foregoing, to the fullest extent permitted by law <span class="webName"></span> specifically disclaims and excludes all warranties or conditions implied by law or statute concerning satisfactory quality and fitness for purpose and reasonable skill and care.
+            </p>
+            <p>
+                4) <span class="webName"></span> uses reasonable care in compiling and presenting the information found on this Site. However, the accuracy of information supplied by independent writers and third-part providers is not within the control of <span class="webName"></span>, and <span class="webName"></span> does not certify that it has verified any information in any article, blog or other posting entered into the <span class="webName"></span> database or available on this Site.
+            </p>
+            <p>
+                5) Further, <span class="webName"></span> does not assume liability for any errors or omissions in the content on this Site or any third party site, including, but not limited to, typographical errors, inaccuracies, outdated information, or broken links.
+            </p>
+            <p>
+                6) <span class="webName"></span> expressly disclaims liability for errors or omissions in the information found on this Site.
+            </p>
+            <p>
+                7) You acknowledge that in any computer system and any network of computer systems there is certain to be "downtime" due to mechanical, telecommunication, software, hardware and third-party vendor failures during which <span class="webName"></span> will be unable to provide this Site to You. <span class="webName"></span> cannot predict or control when such "downtime" may occur and cannot control the duration of such "downtime".
+            </p>
+            <p>
+                8) <span class="webName"></span> uses this Site to provide the access, computer services and connections that link the <span class="webName"></span> database to the Internet and other network systems. <span class="webName"></span> has authority or control only over the operation of this Site. Nevertheless, You understand and agree that the Internet is inherently unreliable and subject to breaches of security. Therefore, <span class="webName"></span> cannot be responsible for the integrity of any information, file or other posting available on or sent to this Site.
+            </p>
+            <p>
+                9) <span class="webName"></span> has no authority or control over the content, operation or performance of any portion of the Internet including other Web sites to which this Site may be linked or from which this Site may be accessed. A link to a Web site not owned or operated by <span class="webName"></span> does not mean that <span class="webName"></span> endorses or accepts responsibility for the content or use of such Site and such link is being provided to You merely as a convenience. Reference to any product, process, publication, service or offering of any third party by trade name, trademark, manufacturer or otherwise does not necessarily constitute or imply its endorsement or recommendation by <span class="webName"></span>.
+            </p>
+            <p>
+                10) The views and opinions of writers, third-party providers, and other users of this Site do not necessarily state or reflect those of <span class="webName"></span>.
+            </p>
+            <h4>
+                LIMITATION OF LIABILITY
+            </h4>
+            <p>
+                Although <span class="webName"></span> has attempted to provide accurate information on the Web Site, <span class="webName"></span> assumes no responsibility for the accuracy of the information. <span class="webName"></span> may change the services, programs or products mentioned at any time without notice. Mention of non-<span class="webName"></span> products or services is for information purposes only and constitutes neither an endorsement nor a recommendation.
+            </p>
+            <p>
+                ALL INFORMATION PROVIDED ON THIS SITE IS PROVIDED "AS IS" WITH ALL FAULTS WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED. IN NO EVENT WILL <span style="text-transform:uppercase;" class="webName"></span> BE LIABLE FOR DAMAGES OF ANY KIND INCLUDING WITHOUT LIMITATION ANY SPECIAL, INDIRECT, INCIDENTAL OR CONSEQUENTIAL DAMAGES, EVEN IF <span style="text-transform:uppercase;" class="webName"></span> HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH. SOME JURISDICTIONS DO NOT ALLOW THE EXCLUSION OF IMPLIED WARRANTIES, SO SOME OR ALL OF THE ABOVE EXCLUSION MAY NOT APPLY TO YOU. IF THE LIMITATIONS SET FORTH IN THE PRECEDING PARAGRAPH ARE HELD INAPPLICABLE OR UNENFORCEABLE FOR ANY REASON, THEN <span style="text-transform:uppercase;" class="webName"></span>'S MAXIMUM LIABILITY TO YOU FOR ANY TYPE OF DAMAGES SHALL BE LIMITED TO U.S. $25.00.
+            </p>
+            <h4>
+                GENERAL
+            </h4>
+            <p>
+                If any provision of these Terms of Use are found to be invalid by any court having competent jurisdiction, the invalidity of such provision shall not affect the validity of the remaining provisions of these Terms of Use, which shall remain in full force and effect.
+            </p>
+            <p>
+                No waiver of any term of these Terms of Use shall be deemed a further or continuing waiver of such term or any other term. No changes to these Terms of Use shall be made except by a revised posting on this page. Any rights not expressly granted herein are reserved.
+            </p>
+
+        </div>
+
+        @{
+            @await Html.PartialAsync("~/Views/Shared/_Footer.cshtml")
+        }
+
+    </div>
+</body>
+</html>
+<script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+<script src="~/js/common.js" asp-append-version="true"></script>

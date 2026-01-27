@@ -1,0 +1,254 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>    
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Views\Account\**" />
+    <Compile Remove="Views\ContentManager\**" />
+    <Compile Remove="Views\Introduction\**" />
+    <Compile Remove="Views\Privacy\**" />
+    <Compile Remove="Views\Subscription\**" />
+    <Compile Remove="Views\Support\**" />
+    <Content Remove="Views\Account\**" />
+    <Content Remove="Views\ContentManager\**" />
+    <Content Remove="Views\Introduction\**" />
+    <Content Remove="Views\Privacy\**" />
+    <Content Remove="Views\Subscription\**" />
+    <Content Remove="Views\Support\**" />
+    <EmbeddedResource Remove="Views\Account\**" />
+    <EmbeddedResource Remove="Views\ContentManager\**" />
+    <EmbeddedResource Remove="Views\Introduction\**" />
+    <EmbeddedResource Remove="Views\Privacy\**" />
+    <EmbeddedResource Remove="Views\Subscription\**" />
+    <EmbeddedResource Remove="Views\Support\**" />
+    <None Remove="Views\Account\**" />
+    <None Remove="Views\ContentManager\**" />
+    <None Remove="Views\Introduction\**" />
+    <None Remove="Views\Privacy\**" />
+    <None Remove="Views\Subscription\**" />
+    <None Remove="Views\Support\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\OpenAIModelReadySteps\askJubilee_step4.gpt" />
+    <Content Remove="wwwroot\OpenAIModelReadySteps\askJubilee_userMemory_step5.gpt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Shared\Error\Error\TokenExpired.cshtml" />
+    <None Include="wwwroot\lib\tinymce\jquery.tinymce.js" />
+    <None Include="wwwroot\lib\tinymce\jquery.tinymce.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\advlist\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\advlist\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\advlist\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\anchor\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\anchor\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\anchor\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\autolink\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\autolink\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\autolink\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\autoresize\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\autoresize\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\autoresize\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\autosave\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\autosave\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\autosave\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\bbcode\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\bbcode\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\bbcode\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\charmap\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\charmap\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\charmap\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\codesample\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\codesample\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\codesample\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\code\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\code\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\code\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\colorpicker\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\colorpicker\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\colorpicker\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\contextmenu\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\contextmenu\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\contextmenu\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\directionality\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\directionality\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\directionality\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\emoticons\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\emoticons\js\emojis.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\emoticons\js\emojis.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\emoticons\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\emoticons\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\fullpage\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\fullpage\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\fullpage\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\fullscreen\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\fullscreen\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\fullscreen\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\help\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\help\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\help\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\hr\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\hr\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\hr\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\imagetools\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\imagetools\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\imagetools\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\image\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\image\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\image\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\importcss\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\importcss\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\importcss\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\insertdatetime\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\insertdatetime\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\insertdatetime\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\legacyoutput\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\legacyoutput\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\legacyoutput\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\link\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\link\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\link\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\lists\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\lists\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\lists\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\media\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\media\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\media\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\nonbreaking\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\nonbreaking\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\nonbreaking\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\noneditable\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\noneditable\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\noneditable\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\pagebreak\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\pagebreak\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\pagebreak\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\paste\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\paste\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\paste\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\preview\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\preview\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\preview\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\print\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\print\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\print\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\quickbars\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\quickbars\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\quickbars\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\save\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\save\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\save\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\searchreplace\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\searchreplace\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\searchreplace\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\spellchecker\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\spellchecker\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\spellchecker\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\tabfocus\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\tabfocus\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\tabfocus\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\table\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\table\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\table\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\template\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\template\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\template\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\textcolor\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\textcolor\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\textcolor\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\textpattern\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\textpattern\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\textpattern\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\toc\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\toc\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\toc\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\visualblocks\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\visualblocks\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\visualblocks\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\visualchars\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\visualchars\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\visualchars\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\wordcount\index.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\wordcount\plugin.js" />
+    <None Include="wwwroot\lib\tinymce\plugins\wordcount\plugin.min.js" />
+    <None Include="wwwroot\lib\tinymce\skins\lightgray\fonts\tinymce-small.svg" />
+    <None Include="wwwroot\lib\tinymce\skins\lightgray\fonts\tinymce.svg" />
+    <None Include="wwwroot\lib\tinymce\themes\inlite\index.js" />
+    <None Include="wwwroot\lib\tinymce\themes\inlite\theme.js" />
+    <None Include="wwwroot\lib\tinymce\themes\inlite\theme.min.js" />
+    <None Include="wwwroot\lib\tinymce\themes\mobile\index.js" />
+    <None Include="wwwroot\lib\tinymce\themes\mobile\theme.js" />
+    <None Include="wwwroot\lib\tinymce\themes\mobile\theme.min.js" />
+    <None Include="wwwroot\lib\tinymce\themes\modern\index.js" />
+    <None Include="wwwroot\lib\tinymce\themes\modern\theme.js" />
+    <None Include="wwwroot\lib\tinymce\themes\modern\theme.min.js" />
+    <None Include="wwwroot\lib\tinymce\themes\silver\index.js" />
+    <None Include="wwwroot\lib\tinymce\themes\silver\theme.js" />
+    <None Include="wwwroot\lib\tinymce\themes\silver\theme.min.js" />
+    <None Include="wwwroot\lib\tinymce\tinymce.js" />
+    <None Include="wwwroot\lib\tinymce\tinymce.min.js" />
+    <None Include="wwwroot\OpenAIModelReadySteps\askJubilee_userMemory_step5.gpt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.23.0" />
+    <PackageReference Include="Bing.QRCode.QRCoder" Version="1.0.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.18" />
+    <PackageReference Include="OpenAI" Version="1.7.2" />
+    <PackageReference Include="OpenAIApi" Version="1.0.1" />
+    <PackageReference Include="Stripe.net" Version="45.1.0" />
+    <PackageReference Include="System.Runtime.Caching" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj" />
+    <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
+    <ProjectReference Include="..\DataTypes\DataTypes.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\" />
+    <Folder Include="Models\" />
+    <Folder Include="wwwroot\Audio\" />
+    <Folder Include="wwwroot\css\" />
+    <Folder Include="wwwroot\js\" />
+    <Folder Include="wwwroot\lib\bootstrap\" />
+    <Folder Include="wwwroot\lib\bootstrap\dist\js\" />
+    <Folder Include="wwwroot\lib\jquery-validation-unobtrusive\" />
+    <Folder Include="wwwroot\lib\jquery-validation\" />
+    <Folder Include="wwwroot\lib\jquery-validation\dist\" />
+    <Folder Include="wwwroot\lib\jquery\" />
+    <Folder Include="wwwroot\lib\jquery\dist\" />
+    <Folder Include="wwwroot\QRCodeImages\" />
+    <Folder Include="wwwroot\uploads\" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<None Update="RedirectToWwwRule.xml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+</Project>

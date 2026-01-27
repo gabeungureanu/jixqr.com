@@ -1,0 +1,188 @@
+﻿@{
+    ViewData["Title"] = @ViewBag.DomainName;
+    //Layout = "";
+}
+<div class="top-bar">
+    <input type="hidden" value="@ViewBag.DomainName" id="hdDomainName">
+    <input type="hidden" value="@ViewBag.PromptPrefix" id="hdPromptPrefix">
+    @{
+
+        if (!string.IsNullOrEmpty(@ViewBag.Name))
+        {
+            if (!string.IsNullOrEmpty(@ViewBag.PageName) && @ViewBag.PageName.ToLower() == "term&privacy")
+            {
+                <div class="header-logo"><a href="/" class="ancLogo"></a></div>
+            }
+            else
+            {
+                <div class="user-info mh" id="divUserInfo" onclick="editProfile();">
+                    @{
+                        string? profileImagePath = ViewBag.ProfileImagePath as string;
+                        string? profileImage = ViewBag.ProfileImage as string;
+                        string? profileImageClass = ViewBag.ProfileImageClass as string;
+                        string defaultImage = Url.Content("~/images/user-icon.jpg");
+                        string? imageUrl = (!string.IsNullOrEmpty(profileImagePath) && !string.IsNullOrEmpty(profileImage))
+                        ? Url.Content(profileImagePath + "/" + profileImage)
+                        : null;
+                    }
+
+                    <!-- Create an Image Element with JavaScript to Check if the Image Exists -->
+                    @if (!string.IsNullOrEmpty(imageUrl))
+                    {
+                            <div class="user-img">
+                                <img id="userImage" src="@imageUrl" alt="User" onerror="this.onerror=null;this.src='@defaultImage';" />
+                             </div>
+                    }
+                    else if (!string.IsNullOrEmpty(profileImageClass) && string.IsNullOrEmpty(imageUrl))
+                    {
+                        <!-- Show Class-Based Avatar -->
+                        <div class="@profileImageClass"></div>
+                    }
+                    else if (string.IsNullOrEmpty(imageUrl) || string.IsNullOrEmpty(profileImageClass))
+                    {
+                        <!-- Show Default Image -->
+                        <img src="@defaultImage" alt="User" />
+                    }
+
+                    <input type="hidden" value="@ViewBag.FName" id="hdFName">
+                    <input type="hidden" value="@ViewBag.LName" id="hdLName">
+                    <p class="user-title" id="peraUserName">
+                        @ViewBag.Name<br>
+                        <span>@ViewBag.EmailAddress</span>
+                    </p>
+                </div>
+                
+                if (!string.IsNullOrEmpty(@ViewBag.PageName) && @ViewBag.PageName.ToLower() == "index")
+                {
+                    <div class="token-counter">
+                        <div class="progress-bar-container token-tooltip">
+                            <span class="token-tooltip-txt">@ViewBag.TotalRemainingToken</span>
+                            <div class="progress-bar prog-container">
+                                <progress id="prog-container" min="0" max="100" value="92"></progress>
+                            </div>
+                        </div>
+                        <span id="totalTokenRemaining">@ViewBag.TotalRemainingToken</span>Tokens Remaining
+                    </div>
+                }
+            }
+        }
+        else
+        {
+            if (!string.IsNullOrEmpty(@ViewBag.PageName) && @ViewBag.PageName.ToLower() == "term&privacy")
+            {
+                <div class="header-logo"><a href="/" class="ancLogo"></a></div>
+            }
+            else
+            {
+                <div class="user-info" id="divUserInfo" style="display:none;">
+                    <img src="~/images/user-icon.jpg" alt="User">
+                    <p class="user-title" id="peraUserName">
+                        <br>
+                        <span></span>
+                    </p>
+                </div>
+            }
+        }
+    }
+
+
+    @if (!string.IsNullOrEmpty(@ViewBag.PageName) && @ViewBag.PageName.ToLower() == "pricing")
+    {
+        
+        <div class="plan-switcher" id="divSubscriptionPlan">
+           
+        </div>
+        <div class="free-plan">2 Months Free</div>
+    }
+    else
+    {
+        @*    -----------------------------------------------------------*@
+        <input type="hidden" id="hdnIsSearched" value="" />
+        <input type="hidden" id="hdnCalRemainingValue" value="@ViewBag.TokenRemainingPercentage" />
+
+        @if (!string.IsNullOrEmpty(@ViewBag.Name) && @ViewBag.IsAccountOwner == "true")
+        {
+            
+        }
+
+
+       
+
+
+
+        @if (!string.IsNullOrEmpty(@ViewBag.Name))
+        {
+           
+        }
+        else
+        {
+           
+        }
+
+    }
+    @*for mobile nav*@
+    <div class="mob-nav" tabindex="0" onclick="togglePopup()" onblur="removePopupClass()">
+        <div class="mob-hamburger">
+            <img src="~/images/dot-menu.svg" />
+        </div>
+        <div class="mob-nav-dd">
+            <ul class="mob-nav-menu">
+
+                @{
+                    if (!string.IsNullOrEmpty(@ViewBag.Name))
+                    {
+                        <li>
+                            <div class="user-info" id="divUserInfo">
+                                <img src="~/images/user-icon.jpg" alt="User">
+                                <input type="hidden" value="@ViewBag.FName" id="hdFName">
+                                <input type="hidden" value="@ViewBag.LName" id="hdLName">
+                                <p class="user-title" id="peraUserName">
+                                    @ViewBag.Name<br>
+                                </p>
+                            </div>
+                        </li>
+                    }
+                    else
+                    {
+                        <li>
+                            <div class="user-info" id="divUserInfo" style="display:none;">
+                                <img src="~/images/user-icon.jpg" alt="User">
+                                <p class="user-title" id="peraUserName">
+                                    <br>
+                                    <span></span>
+                                </p>
+                            </div>
+                        </li>
+                    }
+                }
+
+                @{
+                    if (!string.IsNullOrEmpty(@ViewBag.Name))
+                    {
+                      
+                    }
+                }
+
+               
+
+                @{
+                    if (!string.IsNullOrEmpty(@ViewBag.Name))
+                    {
+                       
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+
+    @{
+        if (@ViewBag.PageName == "index" && !string.IsNullOrEmpty(@ViewBag.Name))
+        {
+            <div class="select-lang" onclick="ShowHideLang(this)" title="Select Language"><div class="flag-icon flag-usa"></div></div>
+        }
+    }
+
+</div>
+<input type="hidden" id="hdnLangPrompt" value="" />
+<div class="lang-selection-popup" id="divLanguage">
+</div>

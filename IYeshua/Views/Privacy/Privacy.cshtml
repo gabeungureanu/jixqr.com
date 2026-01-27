@@ -1,0 +1,130 @@
+﻿@{
+    Layout = null;
+    ViewData["Title"] = "Privacy Policy";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    @{
+        switch (@ViewBag.DomainName.ToLower())
+        {            
+            case "askjubileegpt.com":
+                <title>GPT: Jubilee - @ViewData["Title"]</title>
+                break;
+            default:
+                <title>JubileeChat - @ViewData["Title"]</title>
+                break;
+        }
+    }
+    <link href="~/css/main.css" rel="stylesheet" type="text/css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700,800%7CMontserrat:400,700" rel="stylesheet" type="text/css" asp-append-version="true" />
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.min.css' asp-append-version="true" />
+    <link href="~/css/icons.min.css" rel="stylesheet" asp-append-version="true" />
+    <link rel="shortcut icon" href="" id="lnkFavicon" asp-append-version="true" />
+    <style>
+        .top-bar {
+            border-bottom: 1px solid #e5e5e5;
+        }
+    </style>
+</head>
+<body>
+
+    @await Html.PartialAsync("~/Views/Shared/_Header.cshtml")
+<div class="page-container">
+     @*<div class="top-bar fixed-top-bar">
+        <div class="header-logo"><a href="/" class="ancLogo"></a></div>       
+            <a href="/" title="Back to Home" style="display:flex; align-items:center;">
+                <i class="mdi mdi-arrow-left" style="font-size: 24px;margin-right:10px;"></i> Back
+            </a>
+        </div>*@
+        <div class="header-logo">
+            <a href="/" title="Back to Home" style="display:flex; align-items:center; font-size: 20px;">
+                <i class="mdi mdi-arrow-left" style="font-size: 24px;margin-right:10px; font-size: 20px;"></i> Back
+            </a>
+        </div>
+    <div class="page-content">
+        <h1 class="page-heading">Privacy Policy</h1>
+        <p>Here at <span class="webName"></span> we firmly believe in your privacy and the security of your personal information. We are committed to using any information you give us in a responsible manner. You're very important to us and we want to provide you with a safe and secure online experience.</p>
+        <p>This privacy statement describes how we collect and use your information and gives you choices as to how we use it. We suggest that you review this Privacy Statement periodically as we may update it from time to time.</p>
+        <p>
+            What information does <span class="webName"></span> collect about me?<br>
+            Every time you visit our website, we automatically collect your Internet service provider's address, the web page from which you came, and a record of your activity on our site.
+        </p>
+        <p>
+            When you purchase from <span class="webName"></span> we collect information that you volunteer such as your name, email address, postal address, phone number and other information necessary to process your order.
+        </p>
+        <p>
+            We also collect the information you provide to us when you register for "My Account", participate in a contest or sweepstakes promotion, fill out a survey or questionnaire, or contact us.
+        </p>
+        <h4>
+            How do you use my information?
+        </h4>
+        <p>
+            The information we receive allows us to tailor our product offer and improve your shopping experience, making shopping easier and more enjoyable. It also enables us to process your purchases, confirm your orders, customize the content and layout of our pages, notify you about updates to our websites and products, and provide you with marketing
+        </p>
+        <p>The information you supply to us is added to our customer database and we'll periodically send you emails about new products and services, discounts, special promotions or upcoming events. If you do not wish to receive such emails in the future, please click here for contact information, or click the "unsubscribe" link on any promotional email you receive from us. Please note: In order to process your purchases, we may send you a confirmation email or we may contact you by mail or telephone if we have questions about your order.</p>
+        <p>In some instances, we use third party companies to help us provide our products and services to you, to assist us in managing customer information, to fulfill promotions and to communicate with you. Some of these companies are given access to some or all of the information you provide to us, and some may use cookies on our behalf. These companies are contractually-restricted from using your information in any manner other than in helping us to provide you with the products and services available from <span class="webName"></span>.</p>
+        <p>We may share information with governmental agencies or other companies assisting us in fraud prevention or investigation. We may do so when: (1) permitted or required by law; or, (2) trying to protect against or prevent actual or potential fraud or unauthorized transactions; or, (3) investigating fraud which has already taken place. The information is not provided to these agencies or companies for marketing purposes.</p>
+        <h4>
+            What are 'cookies' and how does <span class="webName"></span> use them?
+        </h4>
+        <p>
+            A "cookie" is a small data file stored on your computer. At <span class="webName"></span> we place a unique identifier in the cookie and use the cookie to connect your computer with the information we store for you in our database. Some examples of the data we store in our database includes your account preferences, items added to your shopping bag, user-specific information on pages accessed, and previous visits to our site. Through cookies we may: alert you to new areas that we think might be of interest to you when you return to our site; record pas activity at our site; or, customize web page content. Your information is stored in a safe and secure database. We do not use cookies to store any of your personal or financial information on your computer.
+        </p>
+        <p>We recognize that you have a choice to refuse cookies. However, by choosing to accept a <span class="webName"></span> cookie you allow us to maintain the preferences stored in your "My Account" and process your order. If you choose not to accept the cookie, purchasing is not possible on the <span class="webName"></span> site.</p>
+        <p>If you are shopping <span class="webName"></span> and are having difficulty adding products to your shopping cart or completing your order, please check your privacy settings in your browser. If you do not wish to change your privacy settings to "Medium" and you are currently using the "Medium High" or "High" settings, you may choose to override your current cookie handling practices for individual sites that you specify, including <span class="webName"></span>.</p>
+        <h4>
+            How can I update or access my information?
+        </h4>
+        <p>
+            We provide you access to the following information if you send us an email and request it:
+        </p>
+        <p>
+        </p><ol>
+            <li>unique identifier information (customer number or password)</li>
+            <li>transaction information (dates on which you made purchases, amounts and types of purchases)</li>
+            <li>contact information (name, address, phone number)</li>
+        </ol>
+        <p></p>
+        <p>We evaluate each request and will reply in an appropriate manner and in a form of communication that ensures the security of the information you have requested. Click here for contact information.</p>
+        <h4>
+            How do I know my information is secure?
+        </h4>
+        <p>
+            We have appropriate security measures in place to protect against the loss, misuse or alteration of information that we have collected from you so you can feel comfortable and secure when shopping. We use industry-standard encryption technologies when transferring and receiving your personal information. On the Internet, when you see either a solid key icon or a locked padlock icon at the lower portion of your browser window, this indicates that the site is secured through Secure Sockets Layer (SSL). Pages requesting personal information should always have one of these icons.
+        </p>
+        <h4>
+            Children's Policy
+        </h4>
+        <p>
+            <span class="webName"></span> does not seek to solicit information from anyone under the age of thirteen (a "Child"). If a Child submits information to us and we know that the person submitting the information is a Child, we will not use it for any purpose. We will delete the information as soon as we discover it and we will not disclose it to third parties.
+        </p>
+        <h4>
+            Changes to This Privacy Policy Statement
+        </h4>
+        <p>
+            From time to time, we may use the information you provide us for new, unanticipated uses not previously addressed in our Privacy Statement. If our information practices changes at some time in the future we will post the policy changes on the privacy page of our website to notify you of these changes. You should check our website periodically for more information on how we use the data we collect.
+        </p>
+        <p>If there is a material change in the manner we use data that we collect, we will update this Privacy Statement to reflect these changes.</p>
+        <h4>
+            Contact Us
+        </h4>
+        <p>
+            Feel free to contact us from our Contacts page for any reason, including a request to be added to or taken off a list, of if you have any questions or concerns.
+        </p>
+        <p>Please note: When you contact us, please provide your name and email address exactly as it appears on correspondence you have received from us.</p>
+
+    </div>
+    <div class="footer-bar" style="position: relative;">           
+            <p>Copyright &copy; 2023 - @DateTime.Now.Year Jubilee Software, Inc. All Rights Reserved | <a href="termscondition">Terms of Use</a> | <a href="/privacypolicy">Privacy Policy</a> | </p>
+    </div>
+</div>
+</body>
+</html>
+
+<script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+<script src="~/js/common.js" asp-append-version="true"></script>

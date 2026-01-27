@@ -1,0 +1,140 @@
+﻿@{
+    ViewData["Title"] = "Current Subscription";
+}
+
+<div class="main-panel-container" style="overflow-y:auto;">
+    <div class="subs-plan">
+        <div class="cp-row">
+            <div class="cp-header">
+                <p>Current Plan</p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                @*<a href="/" style="cursor:pointer;">Back To Home</a>*@
+            </div>
+            <div class="cp-body">
+                <div class="cp-left">
+                    <p class="plan-type">@ViewBag.DomainName @ViewBag.PlanName Subscription</p>
+                    <p class="plan-cost">$@ViewBag.PlanPrice.ToString("F2") per @ViewBag.PlanType</p>
+                    @{
+                        if (@ViewBag.PlanPrice != 0 && @ViewBag.CurrentPlanStatus.ToString().ToLower() == "active")
+                        {
+                            <p>Your plan renews on <b>@ViewBag.SubscriptionEndDate</b></p>
+                        }
+                        else if (@ViewBag.CurrentPlanStatus.ToString().ToLower() == "canceled")
+                        {
+                            <p>Your plan canceled on <b>@ViewBag.SubscriptionEndDate</b></p>
+                        }
+                    }
+
+                </div>
+                <div class="cp-right">
+                    @{
+                        if (!string.IsNullOrEmpty(@ViewBag.SubscriptionID) && @ViewBag.CurrentPlanStatus.ToString().ToLower() == "active" && @ViewBag.PlanPrice > 0)
+                        {
+                            <button class="cp-btn" onclick="ShowSubscriptionPopup()">Cancel Plan</button>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!--New Added code-->
+        <div class="cp-row">
+            <div class="cp-header">
+                <p>My Account Details</p>
+            </div>
+            <div class="cp-body">
+                <div id="divAccounts">
+                </div>
+            </div>
+        </div>
+
+        <!--New Added code-->
+        <div class="cp-row">
+            <div class="cp-header">
+                <p>Payment Methods</p>
+            </div>
+            <div class="cp-body">
+                <div id="divPaymentMethods">
+                </div>
+            </div>
+        </div>
+
+        <div class="cp-row">
+            <div class="cp-header">
+                <p>Billing Information</p>
+            </div>
+            <div class="cp-body">
+                <div id="divBillingInformation">
+                </div>
+            </div>
+        </div>
+
+        <div class="cp-row">
+            <div class="cp-header">
+                <p>Invoice History</p>
+            </div>
+            <div class="cp-body">
+                <div id="divInvoiceHistory">
+                    <p style="font-size: 16px;font-weight: 600;margin-top: 20px;color: #697386;cursor: pointer;"><i class="mdi mdi-plus"></i> Add Payment Method</p>
+                </div>
+            </div>
+        </div>
+        <!--New Added code till here-->
+    </div>
+</div>
+
+<div class="loader" style="display:none;" id="loader">
+    <img src="images/spinner.svg" alt="Loader" />
+</div>
+<div class="overlay-popup" id="popupSubscription">
+    <div class="signup-msg-popup" style="max-width:600px;padding-top:30px;">
+        <div class="close-popup" onclick="ClosePopup()"><i class="mdi mdi-close-circle-outline"></i></div>
+        <div>
+            <p style="font-weight:bold; font-size:28px;margin:0 0 20px;">Cancel your plan</p>
+        </div>
+        <div class="cp-row">
+            <div class="cp-header">
+                <p>Current Plan</p>
+            </div>
+            <div class="cp-body">
+
+                <div class="cp-left">
+                    <p class="plan-type">@ViewBag.PlanName Subscription</p>
+                    <p class="plan-cost">$@ViewBag.PlanPrice.ToString("F2") per @ViewBag.PlanType</p>
+                    @{
+                        if (@ViewBag.PlanPrice != 0)
+                        {
+                            <p>Your plan will be cancelled, but is still available until the end of your billing period <b>@ViewBag.SubscriptionEndDate</b></p>
+                        }
+                    }
+                    <p>If you change your mind, you can renew your subscription.</p>
+                    <p style="font-size:12px;margin:30px 0 15px;">
+                        By cancelling your plan, you agree to our
+                        <a href="/termscondition" target="_blank" style="font-weight:bold;"> Terms of Service</a>
+                        and <a href="/privacypolicy" style="font-weight:bold;" target="_blank">Privacy Policy</a>.
+                    </p>
+                    <p> <button class="cp-btn" style="margin-right:20px; width:350px;" onclick="UnSubscribe()">Cancel Plan</button></p>
+                    <p><button class="cp-btn" style="margin-right:0px; width:350px;" onclick="ClosePopup()">Close</button></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    @if (!string.IsNullOrEmpty(ViewBag.Message))
+    {
+        <div class="overlay @(string.IsNullOrEmpty(ViewBag.Message) ? "display:none" : "display:block")" id="divSubscriptionErrorpopup">
+            <div class="signup-msg-popup">
+                <!-- Close icon -->
+                <div class="close-icon" onclick="CloseErrorPopup()">×</div>
+                <div class="error-chk"></div>
+                <p class="success-heading" style="font-size:25px;">@ViewBag.Message</p>
+                <div class="plan-btn" style="width: 250px;" onclick="CloseErrorPopup()">Cancel</div>
+            </div>
+        </div>
+    }
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+<script src="~/js/subscription/currentsubscription.js" asp-append-version="true"></script>
+<script src="~/js/common.js" asp-append-version="true"></script>

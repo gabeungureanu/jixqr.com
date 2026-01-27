@@ -1,0 +1,51 @@
+﻿
+@{
+    Layout = null;
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="~/assets/css/mystyle.css" rel="stylesheet" asp-append-version="true"/>
+<div class="token-expired-page">
+
+    @{
+        ViewData["Title"] = "TokenExpired";
+    }
+    <div class="uk-grid" data-uk-grid-margin>
+        <div class="uk-width-large-2-3">
+            <div class="md-card">
+
+                @*-----------------------------Start of Form Section-----------------------------*@
+                <div class="user_content main-form-content">
+                    <div class="uk-margin-top">
+                        <div class="uk-grid">
+                            <div class="uk-width-1-1 form-box-margin" id="divFormdata">
+                                <form action="" method="post" class="" id="">
+                                    <div class="uk-grid uk-grid-width-1-1 uk-grid-width-large-1-1 form-box-margin error_page" data-uk-grid-margin>
+                                        <div class="token-expired">
+                                            <i class="fa fa-warning status-update-icon"></i>
+                                            <div class="expired-msg">
+                                                <div class="error_page_header">
+                                                    <div class="uk-width-8-10 uk-container-center">
+                                                        <h2>Token for the current request has been expired.</h2>
+                                                    </div>
+                                                </div>
+                                                <div class="error_page_content">
+                                                    <div class="uk-width-8-10 uk-container-center">
+                                                        <p class="uk-text-large">
+                                                            Please Contact to  Administrator.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                       
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @*-----------------------------End of Form Section-----------------------------*@
+            </div>
+        </div>
+    </div>
+</div>
