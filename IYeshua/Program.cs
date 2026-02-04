@@ -117,22 +117,32 @@ app.UseRequestLocalization(new RequestLocalizationOptions
 });
 
 //--------------------------------------------------------------------z
-//--- Comment following lines on local----
-if (!app.Environment.IsDevelopment())
+//--- URL Rewriting (skip on Linux since Nginx handles HTTPS/redirects)----
+if (!app.Environment.IsDevelopment() && System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
 {
     var rewriteOptions = new RewriteOptions()
-        .AddRedirectToHttps()
-        .AddIISUrlRewrite(new PhysicalFileProvider(Directory.GetCurrentDirectory()), "RedirectToWwwRule.xml");
+        .AddRedirectToHttps();
+
+    // Only add IIS URL rewrite rules if the file exists (Windows/IIS deployment)
+    var rewriteRuleFile = Path.Combine(Directory.GetCurrentDirectory(), "RedirectToWwwRule.xml");
+    if (File.Exists(rewriteRuleFile))
+    {
+        rewriteOptions.AddIISUrlRewrite(new PhysicalFileProvider(Directory.GetCurrentDirectory()), "RedirectToWwwRule.xml");
+    }
+
     app.UseRewriter(rewriteOptions);
 }
-//--- Comment above lines on local----
 
 // ... and so on
 
 // Custom middleware to maintain session dynamically
 //app.UseMiddleware<DynamicSessionTimeoutMiddleware>();   
 
-app.UseHttpsRedirection();
+// Only redirect to HTTPS on Windows - Nginx handles SSL on Linux
+if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseStaticFiles();
 

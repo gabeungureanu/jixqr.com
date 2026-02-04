@@ -4,7 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
+using Npgsql;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -21,13 +21,58 @@ namespace DataAccess
             constr = DBConnection.Main();
         }
 
+        /// <summary>
+        /// Builds a SELECT * FROM function_name(p_param1 => @Param1, ...) SQL string
+        /// for calling PostgreSQL functions via Dapper with CommandType.Text.
+        /// Maps C# parameter names (e.g. @UserID) to PostgreSQL naming convention (p_user_id).
+        /// </summary>
+        private string BuildFunctionCallSql(string functionName, DynamicParameters parameters)
+        {
+            if (parameters == null || !parameters.ParameterNames.Any())
+                return $"SELECT * FROM {functionName}()";
+
+            var paramList = string.Join(", ", parameters.ParameterNames.Select(p => $"{ToSnakeCase(p)} => @{p}"));
+            return $"SELECT * FROM {functionName}({paramList})";
+        }
+
+        /// <summary>
+        /// Converts CamelCase/PascalCase to snake_case with p_ prefix for PostgreSQL parameters.
+        /// Example: UserID -> p_user_id, FileName -> p_file_name
+        /// </summary>
+        private string ToSnakeCase(string input)
+        {
+            if (string.IsNullOrEmpty(input)) return input;
+
+            var result = new System.Text.StringBuilder();
+            result.Append("p_");
+
+            for (int i = 0; i < input.Length; i++)
+            {
+                var c = input[i];
+                if (char.IsUpper(c))
+                {
+                    if (i > 0 && !char.IsUpper(input[i - 1]))
+                        result.Append('_');
+                    else if (i > 0 && i < input.Length - 1 && char.IsUpper(input[i - 1]) && !char.IsUpper(input[i + 1]))
+                        result.Append('_');
+                    result.Append(char.ToLower(c));
+                }
+                else
+                {
+                    result.Append(c);
+                }
+            }
+            return result.ToString().Replace("__", "_");
+        }
+
         public List<T> SelectCommand_SP<T>(List<T> ObjList, string stored_procedure_name, DynamicParameters parameters)
         {
             try
             {
-                using (SqlConnection SqlCon = new SqlConnection(constr.ToString()))
+                using (NpgsqlConnection SqlCon = new NpgsqlConnection(constr.ToString()))
                 {
-                    ObjList = SqlCon.Query<T>(stored_procedure_name.ToString(), parameters, commandType: CommandType.StoredProcedure).ToList();
+                    var sql = BuildFunctionCallSql(stored_procedure_name, parameters);
+                    ObjList = SqlCon.Query<T>(sql, parameters, commandType: CommandType.Text).ToList();
                 }
                 return ObjList;
             }
@@ -40,9 +85,10 @@ namespace DataAccess
         {
             try
             {
-                using (SqlConnection SqlCon = new SqlConnection(constr.ToString()))
+                using (NpgsqlConnection SqlCon = new NpgsqlConnection(constr.ToString()))
                 {
-                    return SqlCon.Query<T>(stored_procedure_name.ToString(), parameters, commandType: CommandType.StoredProcedure).ToList();
+                    var sql = BuildFunctionCallSql(stored_procedure_name, parameters);
+                    return SqlCon.Query<T>(sql, parameters, commandType: CommandType.Text).ToList();
                 }
             }
             catch (Exception)
@@ -55,9 +101,10 @@ namespace DataAccess
         {
             try
             {
-                using (SqlConnection SqlCon = new SqlConnection(constr.ToString()))
+                using (NpgsqlConnection SqlCon = new NpgsqlConnection(constr.ToString()))
                 {
-                    ObjList = (await SqlCon.QueryAsync<T>(stored_procedure_name, parameters, commandType: CommandType.StoredProcedure)).ToList();
+                    var sql = BuildFunctionCallSql(stored_procedure_name, parameters);
+                    ObjList = (await SqlCon.QueryAsync<T>(sql, parameters, commandType: CommandType.Text)).ToList();
                 }
                 return ObjList;
             }
@@ -71,7 +118,7 @@ namespace DataAccess
         {
             try
             {
-                using (SqlConnection SqlCon = new SqlConnection(constr.ToString()))
+                using (NpgsqlConnection SqlCon = new NpgsqlConnection(constr.ToString()))
                 {
                     if (SqlCon.State == ConnectionState.Closed)
                         SqlCon.Open();
@@ -90,7 +137,7 @@ namespace DataAccess
         {
             try
             {
-                using (SqlConnection SqlCon = new SqlConnection(constr.ToString()))
+                using (NpgsqlConnection SqlCon = new NpgsqlConnection(constr.ToString()))
                 {
                     if (SqlCon.State == ConnectionState.Closed)
                         SqlCon.Open();
@@ -109,7 +156,7 @@ namespace DataAccess
         {
             try
             {
-                using (SqlConnection SqlCon = new SqlConnection(constr.ToString()))
+                using (NpgsqlConnection SqlCon = new NpgsqlConnection(constr.ToString()))
                 {
                     ObjList = SqlCon.Query<T>(strQ, commandType: CommandType.Text).FirstOrDefault();
                 }
@@ -125,7 +172,7 @@ namespace DataAccess
         {
             try
             {
-                using (SqlConnection SqlCon = new SqlConnection(constr.ToString()))
+                using (NpgsqlConnection SqlCon = new NpgsqlConnection(constr.ToString()))
                 {
                     ObjList = SqlCon.Query<T>(Query.ToString()).ToList();
                 }
@@ -141,9 +188,10 @@ namespace DataAccess
         {
             try
             {
-                using (SqlConnection SqlCon = new SqlConnection(constr.ToString()))
+                using (NpgsqlConnection SqlCon = new NpgsqlConnection(constr.ToString()))
                 {
-                    ObjModel = SqlCon.Query<T>(stored_procedure_name.ToString(), parameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
+                    var sql = BuildFunctionCallSql(stored_procedure_name, parameters);
+                    ObjModel = SqlCon.Query<T>(sql, parameters, commandType: CommandType.Text).FirstOrDefault();
                     return ObjModel;
                 }
             }
@@ -157,13 +205,13 @@ namespace DataAccess
         {
             try
             {
-                using (SqlConnection SqlCon = new SqlConnection(constr.ToString()))
+                using (NpgsqlConnection SqlCon = new NpgsqlConnection(constr.ToString()))
                 {
-                    await SqlCon.OpenAsync(); // Open the database connection asynchronously
-                    // Execute the query asynchronously and return the result
-                    ObjModel = (await SqlCon.QueryAsync<T>(stored_procedure_name.ToString(),
+                    await SqlCon.OpenAsync();
+                    var sql = BuildFunctionCallSql(stored_procedure_name, parameters);
+                    ObjModel = (await SqlCon.QueryAsync<T>(sql,
                                 parameters,
-                                commandType: CommandType.StoredProcedure,
+                                commandType: CommandType.Text,
                                 commandTimeout: 300)).FirstOrDefault();
                     return ObjModel;
                 }
@@ -178,9 +226,10 @@ namespace DataAccess
         {
             try
             {
-                using (SqlConnection SqlCon = new SqlConnection(constr.ToString()))
+                using (NpgsqlConnection SqlCon = new NpgsqlConnection(constr.ToString()))
                 {
-                    ObjList = SqlCon.Query<T>(stored_procedure_name.ToString(), parameters, commandType: CommandType.StoredProcedure).ToList();
+                    var sql = BuildFunctionCallSql(stored_procedure_name, parameters);
+                    ObjList = SqlCon.Query<T>(sql, parameters, commandType: CommandType.Text).ToList();
                 }
                 return ObjList;
             }
@@ -192,14 +241,14 @@ namespace DataAccess
 
         public int InsertCommand_SPExecute(string stored_procedure_name, DynamicParameters parameters)
         {
-            int rowAffected = 0;
             try
             {
-                using (SqlConnection SqlCon = new SqlConnection(constr.ToString()))
+                using (NpgsqlConnection SqlCon = new NpgsqlConnection(constr.ToString()))
                 {
-                    rowAffected = SqlCon.Execute(stored_procedure_name.ToString(), parameters, commandType: CommandType.StoredProcedure);
+                    var sql = BuildFunctionCallSql(stored_procedure_name, parameters);
+                    SqlCon.QueryFirstOrDefault(sql, parameters, commandType: CommandType.Text);
                 }
-                return rowAffected;
+                return 1;
             }
             catch (Exception)
             {
@@ -211,9 +260,10 @@ namespace DataAccess
         {
             try
             {
-                using (SqlConnection SqlCon = new SqlConnection(constr.ToString()))
+                using (NpgsqlConnection SqlCon = new NpgsqlConnection(constr.ToString()))
                 {
-                    ObjList = SqlCon.Query<T>(stored_procedure_name.ToString(), parameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
+                    var sql = BuildFunctionCallSql(stored_procedure_name, parameters);
+                    ObjList = SqlCon.Query<T>(sql, parameters, commandType: CommandType.Text).FirstOrDefault();
                 }
                 return ObjList;
             }
@@ -227,10 +277,11 @@ namespace DataAccess
         {
             try
             {
-                using (SqlConnection SqlCon = new SqlConnection(constr.ToString()))
+                using (NpgsqlConnection SqlCon = new NpgsqlConnection(constr.ToString()))
                 {
-                    await SqlCon.OpenAsync(); // Open the database connection asynchronously
-                    ObjList = (await SqlCon.QueryAsync<T>(stored_procedure_name.ToString(), parameters, commandType: CommandType.StoredProcedure)).FirstOrDefault();
+                    await SqlCon.OpenAsync();
+                    var sql = BuildFunctionCallSql(stored_procedure_name, parameters);
+                    ObjList = (await SqlCon.QueryAsync<T>(sql, parameters, commandType: CommandType.Text)).FirstOrDefault();
                 }
                 return ObjList;
             }
@@ -242,14 +293,14 @@ namespace DataAccess
 
         public async Task<int> UpdateCommand_SPAsync(string stored_procedure_name, DynamicParameters parameters)
         {
-            int rowAffected = 0;
             try
             {
-                using (SqlConnection SqlCon = new SqlConnection(constr.ToString()))
+                using (NpgsqlConnection SqlCon = new NpgsqlConnection(constr.ToString()))
                 {
-                    rowAffected = await SqlCon.ExecuteAsync(stored_procedure_name.ToString(), parameters, commandType: CommandType.StoredProcedure);
+                    var sql = BuildFunctionCallSql(stored_procedure_name, parameters);
+                    await SqlCon.QueryFirstOrDefaultAsync(sql, parameters, commandType: CommandType.Text);
                 }
-                return rowAffected;
+                return 1;
             }
             catch (Exception)
             {
@@ -262,7 +313,7 @@ namespace DataAccess
             int rowAffected = 0;
             try
             {
-                using (SqlConnection SqlConn = new SqlConnection(constr))
+                using (NpgsqlConnection SqlConn = new NpgsqlConnection(constr))
                 {
                     rowAffected = SqlConn.Execute(strQ, commandType: CommandType.Text);
                 }
@@ -278,21 +329,16 @@ namespace DataAccess
         {
             try
             {
-                using (SqlConnection SqlCon = new SqlConnection(constr))
+                using (NpgsqlConnection SqlCon = new NpgsqlConnection(constr))
                 {
-                    int rowAffected = await SqlCon.ExecuteAsync(
-                        stored_procedure_name,
-                        parameters,
-                        commandType: CommandType.StoredProcedure
-                    );
-
-                    return rowAffected > 0;
+                    var sql = BuildFunctionCallSql(stored_procedure_name, parameters);
+                    await SqlCon.QueryFirstOrDefaultAsync(sql, parameters, commandType: CommandType.Text);
+                    return true;
                 }
             }
             catch (Exception)
             {
-                // Optional: log exception
-                return false; // or rethrow if preferred
+                return false;
             }
         }
 
@@ -303,11 +349,11 @@ namespace DataAccess
             var dt = new DataTable();
             try
             {
-                using (SqlConnection SqlCon = new SqlConnection(constr))
+                using (NpgsqlConnection SqlCon = new NpgsqlConnection(constr))
                 {
-                    using (SqlCommand sqlComd = new SqlCommand(strQ.ToString(), SqlCon))
+                    using (NpgsqlCommand sqlComd = new NpgsqlCommand(strQ.ToString(), SqlCon))
                     {
-                        using (SqlDataAdapter sqlAdpt = new SqlDataAdapter { SelectCommand = sqlComd })
+                        using (NpgsqlDataAdapter sqlAdpt = new NpgsqlDataAdapter { SelectCommand = sqlComd })
                         {
                             dt = new DataTable();
                             sqlAdpt.Fill(dt);
@@ -328,11 +374,11 @@ namespace DataAccess
             var ds = new DataSet();
             try
             {
-                using (SqlConnection SqlCon = new SqlConnection(constr))
+                using (NpgsqlConnection SqlCon = new NpgsqlConnection(constr))
                 {
-                    using (SqlCommand sqlComd = new SqlCommand(strQ.ToString(), SqlCon))
+                    using (NpgsqlCommand sqlComd = new NpgsqlCommand(strQ.ToString(), SqlCon))
                     {
-                        using (SqlDataAdapter sqlAdpt = new SqlDataAdapter { SelectCommand = sqlComd })
+                        using (NpgsqlDataAdapter sqlAdpt = new NpgsqlDataAdapter { SelectCommand = sqlComd })
                         {
                             ds = new DataSet();
                             sqlAdpt.Fill(ds);
@@ -356,23 +402,24 @@ namespace DataAccess
                 .Where(p => p.CanRead)
                 .ToList();
 
-            var columnNames = string.Join(", ", properties.Select(p => $"[{p.Name}]"));
+            var columnNames = string.Join(", ", properties.Select(p => $"\"{p.Name}\""));
             var paramNames = string.Join(", ", properties.Select(p => $"@{p.Name}"));
 
-            string sql = $"INSERT INTO [{tableName}] ({columnNames}) VALUES ({paramNames})";
+            string sql = $"INSERT INTO \"{tableName}\" ({columnNames}) VALUES ({paramNames})";
 
-            using var connection = new SqlConnection(constr);
+            using var connection = new NpgsqlConnection(constr);
             return await connection.ExecuteAsync(sql, model);
         }
         //For the purpose return multiple Lists.
         public (T1?, List<T2>) QueryMultiple<T1, T2>(string storedProc,DynamicParameters? param = null)
         {
-            using (var connection = new SqlConnection(constr))
+            using (var connection = new NpgsqlConnection(constr))
             {
+                var sql = BuildFunctionCallSql(storedProc, param);
                 using (var multi = connection.QueryMultiple(
-                    storedProc,
+                    sql,
                     param,
-                    commandType: CommandType.StoredProcedure))
+                    commandType: CommandType.Text))
                 {
                     var singleModel = multi.ReadFirstOrDefault<T1>();
                     var list = multi.Read<T2>().ToList();
@@ -382,8 +429,3 @@ namespace DataAccess
         }
     }
 }
-
-
-
-
-
