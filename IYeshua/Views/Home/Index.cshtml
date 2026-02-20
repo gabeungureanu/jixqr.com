@@ -442,15 +442,13 @@
 
 @if (IsVersionDate)
 {
-<script src="~/js/home/home.js?v=@DateTime.Now.ToString("yyyyMMddHHmmss")"  ></script>
-<script src="~/js/userprofile/userprofile.js?v=@DateTime.Now.ToString("yyyyMMddHHmmss")" ></script>
-<script src="~/js/common.js" ></script>
+<script src="~/js/Home/Home.js?v=@DateTime.Now.ToString("yyyyMMddHHmmss")"  ></script>
+<script src="~/js/Common.js" ></script>
 }
 else
 {
-<script src="~/js/home/home.js"  asp-append-version="true"></script>
-<script src="~/js/userprofile/userprofile.js" asp-append-version="true"></script>
-<script src="~/js/common.js" asp-append-version="true"></script> 
+<script src="~/js/Home/Home.js"  asp-append-version="true"></script>
+<script src="~/js/Common.js" asp-append-version="true"></script>
 }
 
 

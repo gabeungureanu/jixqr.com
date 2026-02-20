@@ -1005,7 +1005,7 @@ namespace BusinessLogic.BLImplementation.ShareRedirector
             {
                 DynamicParameters dParam = new DynamicParameters();
                 dParam.Add("@NanoId", NanoId);
-                objshare = await _dBFactory.SelectCommand_SPAsync(objshare, "System_getBlobId_BynanoId", dParam);
+                objshare = await _dBFactory.SelectCommand_SPAsync(objshare, "system_getblobid_bynanoid", dParam);
             }
             catch (Exception)
             {

@@ -330,25 +330,47 @@ namespace Jubilee.Controllers
 
         public string GetBlobSasUrl(string containerName, string blobName)
         {
-
-            BlobServiceClient blobServiceClient = new BlobServiceClient(_azureconnectionString);
-            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
-            BlobClient blobClient = containerClient.GetBlobClient(blobName);
-
-            if (blobClient.CanGenerateSasUri)
+            try
             {
-                BlobSasBuilder sasBuilder = new BlobSasBuilder()
+                if (string.IsNullOrEmpty(_azureconnectionString))
                 {
-                    BlobName = blobName,
-                    ExpiresOn = DateTimeOffset.UtcNow.AddYears(100),
-                    Resource = "b"
-                };
-                sasBuilder.SetPermissions(BlobSasPermissions.Read);
+                    _logger.LogError("Azure connection string is not configured");
+                    return null;
+                }
 
-                Uri sasUri = blobClient.GenerateSasUri(sasBuilder);
-                return sasUri.ToString();
+                BlobServiceClient blobServiceClient = new BlobServiceClient(_azureconnectionString);
+                BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+                BlobClient blobClient = containerClient.GetBlobClient(blobName);
+
+                if (!blobClient.Exists())
+                {
+                    _logger.LogWarning($"Blob not found: {containerName}/{blobName}");
+                    return null;
+                }
+
+                if (blobClient.CanGenerateSasUri)
+                {
+                    BlobSasBuilder sasBuilder = new BlobSasBuilder()
+                    {
+                        BlobName = blobName,
+                        ExpiresOn = DateTimeOffset.UtcNow.AddYears(100),
+                        Resource = "b"
+                    };
+                    sasBuilder.SetPermissions(BlobSasPermissions.Read);
+
+                    Uri sasUri = blobClient.GenerateSasUri(sasBuilder);
+                    _logger.LogInformation($"Generated SAS URL for: {containerName}/{blobName}");
+                    return sasUri.ToString();
+                }
+
+                _logger.LogError($"Cannot generate SAS URI for blob: {containerName}/{blobName}");
+                return null;
             }
-            return null;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error generating SAS URL for: {containerName}/{blobName}");
+                return null;
+            }
         }
 
         public async Task<IActionResult> RedirectFile(string fileName)
@@ -457,6 +479,36 @@ namespace Jubilee.Controllers
                 _utilityService.InsertErrorLogs(Guid.Empty, "HomeController", "BindVoiceByUserAsync", ex.Message, ex.Message, "Frontend", "", true);
             }
             return Json(textToSpeachVoice);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetWebSiteConfiguration()
+        {
+            try
+            {
+                string domainName = Request.Host.Host;
+                var websiteConfig = await _websiteSettings.GetWebsiteAsync(domainName);
+                if (websiteConfig != null)
+                {
+                    return Json(new
+                    {
+                        system_WebsiteName = websiteConfig.System_WebsiteName,
+                        system_DomainName = websiteConfig.System_DomainName,
+                        faviconImagePath = websiteConfig.FaviconImagePath,
+                        mainImagePath = websiteConfig.MainImagePath,
+                        brandImagePath = websiteConfig.BrandImagePath,
+                        mainImageAltText = websiteConfig.MainImageAltText,
+                        resReplacedText = websiteConfig.ResReplacedText
+                    });
+                }
+                return Json(new { });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in GetWebSiteConfiguration");
+                _utilityService.InsertErrorLogs(Guid.Empty, "HomeController", "GetWebSiteConfiguration", ex.Message, ex.StackTrace ?? "", "Frontend", "", true);
+                return Json(new { });
+            }
         }
     }
 }

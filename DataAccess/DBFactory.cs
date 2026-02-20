@@ -42,27 +42,7 @@ namespace DataAccess
         private string ToSnakeCase(string input)
         {
             if (string.IsNullOrEmpty(input)) return input;
-
-            var result = new System.Text.StringBuilder();
-            result.Append("p_");
-
-            for (int i = 0; i < input.Length; i++)
-            {
-                var c = input[i];
-                if (char.IsUpper(c))
-                {
-                    if (i > 0 && !char.IsUpper(input[i - 1]))
-                        result.Append('_');
-                    else if (i > 0 && i < input.Length - 1 && char.IsUpper(input[i - 1]) && !char.IsUpper(input[i + 1]))
-                        result.Append('_');
-                    result.Append(char.ToLower(c));
-                }
-                else
-                {
-                    result.Append(c);
-                }
-            }
-            return result.ToString().Replace("__", "_");
+            return "p_" + input.ToLower();
         }
 
         public List<T> SelectCommand_SP<T>(List<T> ObjList, string stored_procedure_name, DynamicParameters parameters)
